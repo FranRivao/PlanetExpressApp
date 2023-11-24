@@ -17,6 +17,8 @@ public class ListaNaves {
      * @param capacidad
      */
     public ListaNaves(int capacidad) {
+        this.naves=new Nave[capacidad];
+
         
 		
 		
