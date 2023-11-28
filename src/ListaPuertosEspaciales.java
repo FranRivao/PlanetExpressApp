@@ -1,11 +1,14 @@
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
 /**
  * Description of the class
  *
- * @author
- * @author
+ * @author Francisco Manuel Rivao
+ * @author Alejandro Sanchez Millan
  * @version     1.0
  */
 public class ListaPuertosEspaciales {
@@ -17,20 +20,23 @@ public class ListaPuertosEspaciales {
      * @param capacidad
      */
     public ListaPuertosEspaciales(int capacidad) {
-        
-		
+        this.lista = new PuertoEspacial[capacidad];
     }
     // TODO: Devuelve el número de puertos espaciales que hay en la lista
     public int getOcupacion() {
-
+        int pos = 0;
+        while(lista[pos] != null) {
+            pos++;
+        }
+        return pos;
     }
     // TODO: ¿Está llena la lista?
     public boolean estaLlena() {
-
+        return getOcupacion() == lista.length;
     }
-	// TODO: Devuelve un puerto espacial dado un indice
+    // TODO: Devuelve un puerto espacial dado un indice
     public PuertoEspacial getPuertoEspacial(int i) {
-        return null;
+        return lista[i];
     }
 
     /**
@@ -39,7 +45,11 @@ public class ListaPuertosEspaciales {
      * @return true en caso de que se añada correctamente, false en caso de lista llena o error
      */
     public boolean insertarPuertoEspacial(PuertoEspacial puertoEspacial) {
-
+        if (!estaLlena()){
+            int pos = getOcupacion();
+            lista[pos] = puertoEspacial;
+            return true;
+        }
         return false;
     }
 
@@ -49,8 +59,14 @@ public class ListaPuertosEspaciales {
      * @return Puerto espacial que encontramos o null si no existe
      */
     public PuertoEspacial buscarPuertoEspacial(String codigo) {
-
-        return null;
+        int pos = 0;
+        PuertoEspacial puerto = null;
+        while(lista[pos] != null && puerto == null) {
+            if (lista[pos].getCodigo() == codigo) {
+                puerto = lista[pos];
+            }
+        }
+        return puerto;
     }
 
     /**
@@ -62,9 +78,8 @@ public class ListaPuertosEspaciales {
      * @return
      */
     public PuertoEspacial seleccionarPuertoEspacial(Scanner teclado, String mensaje) {
-        PuertoEspacial puertoEspacial = null;
-
-
+        System.out.println(mensaje);
+        PuertoEspacial puertoEspacial = lista[teclado.nextInt()];
         return puertoEspacial;
     }
 
@@ -76,12 +91,18 @@ public class ListaPuertosEspaciales {
     public boolean escribirPuertosEspacialesCsv(String nombre) {
         PrintWriter pw = null;
         try {
-
+            pw = new PrintWriter(new FileWriter(nombre,true));
+            for (int i = 0; i < lista.length; i++) {
+                pw.println(lista[i].toString());
+            }
             return true;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         } finally {
-
+            if (pw != null){
+                pw.close();
+            }
         }
     }
 
@@ -96,13 +117,55 @@ public class ListaPuertosEspaciales {
     public static ListaPuertosEspaciales leerPuertosEspacialesCsv(String fichero, int capacidad) {
         ListaPuertosEspaciales listaPuertosEspaciales = new ListaPuertosEspaciales(capacidad);
         Scanner sc = null;
+        String nombre, codigo, radio, azimutm, polar, numMuelles;
+        nombre = codigo = radio = azimutm = polar = numMuelles = "";
+
         try {
+            sc = new Scanner(new FileReader("texto.txt"));
+            int pos, puntoComas;
 
-        } catch (Exception e) {
-            return null;
+            while (sc.hasNext()) {
+                String cadena = sc.nextLine();
+                nombre = ""; codigo = ""; radio = ""; azimutm = ""; polar = ""; numMuelles = ""; pos = 0; puntoComas = 0;
+
+                while (pos < cadena.length()) {
+                    if (cadena.charAt(pos) != ';') {
+                        switch (puntoComas) {
+                            case 0:
+                                nombre += cadena.charAt(pos);
+                                break;
+                            case 1:
+                                codigo += cadena.charAt(pos);
+                                break;
+                            case 2:
+                                radio += cadena.charAt(pos);
+                                break;
+                            case 3:
+                                azimutm += cadena.charAt(pos);
+                                break;
+                            case 4:
+                                polar += cadena.charAt(pos);
+                                break;
+                            case 5:
+                                numMuelles += cadena.charAt(pos);
+                                break;
+                        }
+                    } else puntoComas++;
+                    pos++;
+                }
+
+                listaPuertosEspaciales.insertarPuertoEspacial(
+                        new PuertoEspacial(nombre, codigo, Double.parseDouble(radio), Double.parseDouble(azimutm), Double.parseDouble(polar), Integer.parseInt(numMuelles))
+                );
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         } finally {
-
+            if (sc != null) {
+                sc.close();
+            }
         }
+
         return listaPuertosEspaciales;
     }
 }

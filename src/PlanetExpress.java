@@ -121,7 +121,7 @@ public class PlanetExpress {
      * @return opción seleccionada
      */
     public static int menu(Scanner teclado) {
-
+        return Utilidades.leerNumero(teclado, "Seleccione un numero: ", 0,5);
     }
 
     /**
@@ -142,26 +142,33 @@ public class PlanetExpress {
      * En el caso de que no se reciban exactamente estos argumentos, el programa mostrará el siguiente mensaje
      * y concluirá la ejecución del mismo: `Número de argumentos incorrecto`.
      */
-    public static void main(String[] args) {
+    public static void main(String [] args) {
         if (args.length != 10) {
             System.out.println("Número de argumentos incorrecto");
             return;
         }
 
+        Scanner teclado = new Scanner(System.in);
+        int opcion;
 
         do {
             opcion = menu(teclado);
             switch (opcion) {
                 case 1:     // TODO: Alta de Porte
-
-
+                    Porte.altaPorte(teclado,
+                            new Random(),
+                            new ListaPuertosEspaciales(Integer.getInteger(args[0])),
+                            new ListaNaves(Integer.getInteger(args[1])),
+                            new ListaPortes(Integer.getInteger(args[2]))
+                    );
                     break;
                 case 2:     // TODO: Alta de Cliente
-
-
+                    Cliente.altaCliente(teclado,
+                            new ListaClientes(Integer.getInteger(args[3])),
+                            Integer.getInteger(args[4])
+                    );
                     break;
                 case 3:     // TODO: Buscar Porte
-
 
                     break;
                 case 4:     // TODO: Listado de envíos de un cliente
