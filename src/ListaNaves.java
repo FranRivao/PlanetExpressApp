@@ -73,8 +73,9 @@ public class ListaNaves {
             if(naves[posicion].getMatricula()==matricula){
                 nave=naves[posicion];
             }
+            posicion++;
         }
-        return null;
+        return nave;
     }
     // TODO: Muestra por pantalla las naves de la lista con el formato indicado en el enunciado
     public void mostrarNaves() {
