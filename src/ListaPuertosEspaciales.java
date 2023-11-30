@@ -121,7 +121,7 @@ public class ListaPuertosEspaciales {
         nombre = codigo = radio = azimutm = polar = numMuelles = "";
 
         try {
-            sc = new Scanner(new FileReader("texto.txt"));
+            sc = new Scanner(new FileReader(fichero));
             int pos, puntoComas;
 
             while (sc.hasNext()) {
