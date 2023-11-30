@@ -8,7 +8,7 @@ import java.util.Scanner;
  *
  * @author
  * @author
- * @version     1.0
+ * @version 1.0
  */
 public class Envio {
 
@@ -37,32 +37,44 @@ public class Envio {
         this.columna = columna;
         this.precio = precio;
     }
+
     public String getLocalizador() {
         return localizador;
     }
+
     public Porte getPorte() {
         return porte;
     }
+
     public Cliente getCliente() {
         return cliente;
     }
+
     public int getFila() {
         return fila;
     }
+
     public int getColumna() {
         return columna;
     }
+
     // TODO: Ejemplos: "1A" para el hueco con fila 1 y columna 1, "3D" para el hueco con fila 3 y columna 4
     public String getHueco() {
-        return "";
+        return String.valueOf(fila) + 'A' + (columna - 1);
     }
+
     public double getPrecio() {
         return precio;
     }
+
     //TODO: Texto que debe generar: Envío PM1111AAAABBBBC para Porte PM0066 de GGT M5 (01/01/2023 08:15:00) a CID M1 (01/01/2024 11:00:05) en hueco 6C por 13424,56 SSD
     public String toString() {
+        return "Envío "+localizador+" para Porte "+porte.getID()+" de "
+                +porte.getOrigen().getCodigo()+" ("+porte.getSalida().toString()+") a "+porte.getDestino().getCodigo()
+                +" ("+porte.getLlegada().toString()+") en hueco "+getHueco()+" por "+precio+" SSD ";
 
     }
+
     // TODO: Cancela este envío, eliminándolo de la lista de envíos del porte y del cliente correspondiente
     public boolean cancelar() {
 
@@ -71,28 +83,23 @@ public class Envio {
     /**
      * TODO: Método para imprimir la información de este envío en un fichero que respecta el formato descrito en el
      *  enunciado
+     *
      * @param fichero
      * @return Devuelve la información con el siguiente formato como ejemplo ->
-     *     -----------------------------------------------------
-     *     --------- Factura del envío PM1111AAAABBBBC ---------
-     *     -----------------------------------------------------
-     *     Porte: PM0066
-     *     Origen: Gaia Galactic Terminal (GGT) M5
-     *     Destino: Cidonia (CID) M1
-     *     Salida: 01/01/2023 08:15:00
-     *     Llegada: 01/01/2024 11:00:05
-     *     Cliente: Zapp Brannigan, zapp.brannigan@dop.gov
-     *     Hueco: 6C
-     *     Precio: 13424,56 SSD
+     * -----------------------------------------------------
+     * --------- Factura del envío PM1111AAAABBBBC ---------
+     * -----------------------------------------------------
+     * Porte: PM0066
+     * Origen: Gaia Galactic Terminal (GGT) M5
+     * Destino: Cidonia (CID) M1
+     * Salida: 01/01/2023 08:15:00
+     * Llegada: 01/01/2024 11:00:05
+     * Cliente: Zapp Brannigan, zapp.brannigan@dop.gov
+     * Hueco: 6C
+     * Precio: 13424,56 SSD
      */
     public boolean generarFactura(String fichero) {
         try {
-
-
-
-
-
-
 
 
             return true;
@@ -102,18 +109,17 @@ public class Envio {
     }
 
 
-
     /**
-     *	TODO: Genera un localizador de envío. Este consistirá en una cadena de 15 caracteres, de los cuales los seis
-	 *   primeros será el ID del porte asociado y los 9 siguientes serán letras mayúsculas aleatorias. Ejemplo: PM0123ABCD
+     * TODO: Genera un localizador de envío. Este consistirá en una cadena de 15 caracteres, de los cuales los seis
+     *   primeros será el ID del porte asociado y los 9 siguientes serán letras mayúsculas aleatorias. Ejemplo: PM0123ABCD
      *   NOTA: Usar el objeto rand pasado como argumento para la parte aleatoria.
+     *
      * @param rand
      * @param idPorte
      * @return
      */
     public static String generarLocalizador(Random rand, String idPorte) {
         StringBuilder localizador = new StringBuilder(idPorte);
-
 
 
         return localizador.toString();
@@ -124,6 +130,7 @@ public class Envio {
      * TODO: Método para crear un nuevo envío para un porte y cliente específico, pidiendo por teclado los datos
      *  necesarios al usuario en el orden y con los textos indicados en los ejemplos de ejecución del enunciado
      *  La función solicita repetidamente los parámetros hasta que sean correctos
+     *
      * @param teclado
      * @param rand
      * @param porte
@@ -133,7 +140,6 @@ public class Envio {
     public static Envio altaEnvio(Scanner teclado, Random rand, Porte porte, Cliente cliente) {
 
 
-
-        return ;
+        return;
     }
 }
