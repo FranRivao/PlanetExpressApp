@@ -6,8 +6,8 @@ import java.util.Scanner;
 /**
  * Description of the class
  *
- * @author
- * @author
+ * @author  Francisco Manuel Rivao
+ * @author  Alejandro Sanchez Millan
  * @version     1.0
  */
 public class Porte {
@@ -37,7 +37,15 @@ public class Porte {
      * @param precio
      */
     public Porte(String id, Nave nave, PuertoEspacial origen, int muelleOrigen, Fecha salida, PuertoEspacial destino, int muelleDestino, Fecha llegada, double precio) {
-
+        this.id = id;
+        this.nave = nave;
+        this.origen = origen;
+        this.muelleOrigen = muelleOrigen;
+        this.salida = salida;
+        this.destino = destino;
+        this.muelleDestino = muelleDestino;
+        this.llegada = llegada;
+        this.precio = precio;
     }
     public String getID() {
         return id;
@@ -68,15 +76,26 @@ public class Porte {
     }
     // TODO: Devuelve el número de huecos libres que hay en el porte
     public int numHuecosLibres() {
-
+        int fil = 0, col, contadorHuecos = 0;
+        while(fil < huecos.length) {
+            col = 0;
+            while (col < huecos[fil].length) {
+                if (!huecos[fil][col]) {
+                    contadorHuecos++;
+                }
+                col++;
+            }
+            fil++;
+        }
+        return contadorHuecos;
     }
     // TODO: ¿Están llenos todos los huecos?
     public boolean porteLleno() {
-
+        return numHuecosLibres() == 0;
     }
     // TODO: ¿Está ocupado el hueco consultado?
     public boolean huecoOcupado(int fila, int columna) {
-
+        return huecos[fila][columna];
     }
     public Envio buscarEnvio(String localizador) {
         return listaEnvios.buscarEnvio(localizador);
@@ -90,8 +109,7 @@ public class Porte {
      * @return el objeto Envio que corresponde, o null si está libre o se excede en el límite de fila y columna
      */
     public Envio buscarEnvio(int fila, int columna) {
-
-        return null;
+        return listaEnvios.buscarEnvio(getID(), fila,columna);
     }
 
 
@@ -102,7 +120,7 @@ public class Porte {
      * @return
      */
     public boolean ocuparHueco(Envio envio) {
-
+        
         return false;
     }
 

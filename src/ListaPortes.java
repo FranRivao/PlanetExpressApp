@@ -1,12 +1,13 @@
-import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
 /**
  * Description of the class
  *
- * @author
- * @author
+ * @author  Francisco Manuel Rivao
+ * @author  Alejandro Sanchez Millan
  * @version     1.0
  */
 public class ListaPortes {
@@ -127,11 +128,20 @@ public class ListaPortes {
      * @return
      */
     public boolean escribirPortesCsv(String fichero) {
+        PrintWriter pw = null;
         try {
-
+            pw = new PrintWriter(new FileWriter(fichero, true));
+            for (int i = 0; i < portes.length; i++) {
+                pw.println(portes[i].toString());
+            }
             return true;
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
             return false;
+        } finally {
+            if (pw != null){
+                pw.close();
+            }
         }
     }
 
