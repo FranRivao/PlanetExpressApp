@@ -65,6 +65,7 @@ public class ListaPuertosEspaciales {
             if (lista[pos].getCodigo() == codigo) {
                 puerto = lista[pos];
             }
+            pos++;
         }
         return puerto;
     }
@@ -79,8 +80,7 @@ public class ListaPuertosEspaciales {
      */
     public PuertoEspacial seleccionarPuertoEspacial(Scanner teclado, String mensaje) {
         System.out.println(mensaje);
-        PuertoEspacial puertoEspacial = lista[teclado.nextInt()];
-        return puertoEspacial;
+        return lista[teclado.nextInt()];
     }
 
     /**
@@ -96,7 +96,7 @@ public class ListaPuertosEspaciales {
                 pw.println(lista[i].toString());
             }
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
         } finally {

@@ -113,10 +113,10 @@ public class Utilidades {
             System.out.print("Año: ");
             anio = teclado.nextInt();
 
-            if (!validaFecha(dia, mes) || anio <= 0) {
+            if (!Fecha.comprobarFecha(dia, mes, anio)) {
                 System.out.println("La fecha no es valida");
             }
-        } while (!validaFecha(dia, mes) || anio <= 0);
+        } while (!Fecha.comprobarFecha(dia, mes, anio));
 
         return new Fecha(dia, mes, anio);
     }
@@ -150,7 +150,7 @@ public class Utilidades {
             minuto = teclado.nextInt();
             System.out.print("\nSegundo: ");
             segundo = teclado.nextInt();
-        } while (!validaFecha(dia, mes) || anio <= 0);
+        } while (!Fecha.comprobarFecha(dia, mes, anio) || !Fecha.comprobarHora(hora, minuto, segundo));
 
         return new Fecha(dia, mes, anio, hora, minuto, segundo);
     }
@@ -164,29 +164,5 @@ public class Utilidades {
     public static String leerCadena(Scanner teclado, String s) {
         System.out.print(s);
         return teclado.next();
-    }
-
-    /**
-     * Devuelve si la fecha es válida
-     * @param dia
-     * @param mes
-     * @return boolean
-     */
-    private static boolean validaFecha(int dia, int mes) {
-        boolean valido = false;
-        if (dia > 0 && mes >= 1 && mes <= 12) {
-            switch (mes){
-                case 1, 3, 5, 7, 8, 10, 11:
-                    valido = dia <= 31;
-                    break;
-                case 2:
-                    valido = dia <= 28;
-                    break;
-                default:
-                    valido = dia <= 30;
-                    break;
-            }
-        }
-        return valido;
     }
 }
