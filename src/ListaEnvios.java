@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Scanner;
 
 /**
@@ -21,8 +18,6 @@ public class ListaEnvios {
      */
     public ListaEnvios(int capacidad) {
         envios = new Envio[capacidad];
-
-
     }
 
     // TODO: Devuelve el número de envíos que hay en la lista
@@ -38,13 +33,10 @@ public class ListaEnvios {
     // TODO: ¿Está llena la lista de envíos?
     public boolean estaLlena() {
         return envios.length == getOcupacion();
-
-
     }
 
     //TODO: Devuelve el envio dado un indice
     public Envio getEnvio(int i) {
-
         return envios[i];
     }
 
@@ -83,8 +75,6 @@ public class ListaEnvios {
             pos++;
         }
         return envio;
-
-
     }
 
     /**
@@ -95,7 +85,6 @@ public class ListaEnvios {
      * @param columna
      * @return el envio que encontramos o null si no existe
      */
-
     public Envio buscarEnvio(String idPorte, int fila, int columna) {
         int pos = 0;
         Envio envio = null;
@@ -120,13 +109,12 @@ public class ListaEnvios {
         while (pos < envios.length && envios[pos].getLocalizador() != localizador) {
             pos++;
         }
-        if (pos == envios.length) {
-            res = false;
-        } else {
-            for (int i = pos; i < envios.length - 1; i++) {
-                envios[i] = envios[i + 1];
+        for (int i = pos; i < envios.length - 1; i++) {
+            if (i+1 != envios.length) {
+                envios[i] = envios[i+1];
+            } else {
+                envios[i] = null;
             }
-            envios[envios.length - 1] = null;
         }
         return res;
     }
@@ -135,8 +123,6 @@ public class ListaEnvios {
      * TODO: Muestra por pantalla los Envios de la lista, con el formato que aparece
      * en el enunciado
      */
-
-
     public void listarEnvios() {
         for (int i = 0; i < envios.length; i++) {
             System.out.println(envios[i].toString());
@@ -153,7 +139,6 @@ public class ListaEnvios {
      * @return
      */
     public Envio seleccionarEnvio(Scanner teclado, String mensaje) {
-        ;
         System.out.println(mensaje);
         Envio envio = envios[teclado.nextInt()];
         return envio;
@@ -169,12 +154,18 @@ public class ListaEnvios {
     public boolean aniadirEnviosCsv(String fichero) {
         PrintWriter pw = null;
         try {
-
+            pw = new PrintWriter(new FileWriter(fichero,true));
+            for (int i = 0; i < envios.length; i++) {
+                pw.println(envios[i].toString());
+            }
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
             return false;
         } finally {
-
+            if (pw != null){
+                pw.close();
+            }
         }
     }
 
@@ -187,12 +178,55 @@ public class ListaEnvios {
      */
     public static void leerEnviosCsv(String ficheroEnvios, ListaPortes portes, ListaClientes clientes) {
         Scanner sc = null;
+        String localizador, idPorte, email, filas, columnas, precio;
+
         try {
+            sc = new Scanner(new FileReader(ficheroEnvios));
+            int pos, puntoComas, lineas = 0;
 
-        } catch (FileNotFoundException e) {
-            System.out.println("No se ha encontrado el fichero de envíos");
+            while (sc.hasNext()) {
+                lineas++;
+            }
+            ListaEnvios listaEnvios = new ListaEnvios(lineas);
+
+            while (sc.hasNext()) {
+                String cadena = sc.nextLine();
+                localizador = idPorte = email = filas = columnas = precio = ""; pos = puntoComas = 0;
+
+                while (pos < cadena.length()) {
+                    if (cadena.charAt(pos) != ';') {
+                        switch (puntoComas) {
+                            case 0:
+                                localizador += cadena.charAt(pos);
+                                break;
+                            case 1:
+                                idPorte += cadena.charAt(pos);
+                                break;
+                            case 2:
+                                email += cadena.charAt(pos);
+                                break;
+                            case 3:
+                                filas += cadena.charAt(pos);
+                                break;
+                            case 4:
+                                columnas += cadena.charAt(pos);
+                                break;
+                            case 5:
+                                precio += cadena.charAt(pos);
+                                break;
+                        }
+                    } else puntoComas++;
+                    pos++;
+                }
+
+                listaEnvios.insertarEnvio(new Envio(localizador, portes.buscarPorte(idPorte), clientes.buscarClienteEmail(email), Integer.getInteger(filas), Integer.getInteger(columnas), Integer.getInteger(precio)));
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         } finally {
-
+            if (sc != null) {
+                sc.close();
+            }
         }
     }
 }
