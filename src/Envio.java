@@ -76,8 +76,11 @@ public class Envio {
     }
 
     // TODO: Cancela este envío, eliminándolo de la lista de envíos del porte y del cliente correspondiente
+    //No se hacerlo
     public boolean cancelar() {
 
+
+        return
     }
 
     /**
