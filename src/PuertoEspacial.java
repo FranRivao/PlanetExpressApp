@@ -44,14 +44,22 @@ public class PuertoEspacial {
     public double getAzimut() {
         return azimut;
     }
-
     public double getPolar() {
         return polar;
     }
     public int getMuelles() {
         return numMuelles;
     }
-
+    public String getIniciales() {
+        int pos = 0;
+        String iniciales = "";
+        iniciales += nombre.charAt(pos);
+        while(pos < nombre.length()) {
+            if (nombre.charAt(pos) == ' ')
+                iniciales += nombre.charAt(pos+1);
+        }
+        return iniciales;
+    }
     /**
      * TODO: Método para calcular la distancia entre el puerto espacial que recibe el mensaje y el puerto
      *  espacial "destino" siguiendo las ecuaciones del enunciado (Las formulas se encuentran en el enunciado)

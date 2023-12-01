@@ -1,4 +1,6 @@
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
 import java.util.Scanner;
@@ -101,7 +103,6 @@ public class Porte {
         return listaEnvios.buscarEnvio(localizador);
     }
 
-
     /**
      * TODO: Devuelve el objeto Envio que corresponde con una fila o columna,
      * @param fila
@@ -109,9 +110,8 @@ public class Porte {
      * @return el objeto Envio que corresponde, o null si está libre o se excede en el límite de fila y columna
      */
     public Envio buscarEnvio(int fila, int columna) {
-        return listaEnvios.buscarEnvio(getID(), fila,columna);
+        return listaEnvios.buscarEnvio(id, fila,columna);
     }
-
 
     /**
      * TODO: Método que Si está desocupado el hueco que indica el envio, lo pone ocupado y devuelve true,
@@ -120,10 +120,13 @@ public class Porte {
      * @return
      */
     public boolean ocuparHueco(Envio envio) {
-        
+        if (!huecoOcupado(envio.getFila(), envio.getColumna())) {
+            huecos[envio.getFila()][envio.getColumna()] = true;
+            listaEnvios.insertarEnvio(envio);
+            return true;
+        }
         return false;
     }
-
 
     /**
      * TODO: A través del localizador del envio, se desocupará el hueco
@@ -131,7 +134,12 @@ public class Porte {
      * @return
      */
     public boolean desocuparHueco(String localizador) {
-
+        Envio envio = buscarEnvio(localizador);
+        if (huecoOcupado(envio.getFila(), envio.getColumna())) {
+            huecos[envio.getFila()][envio.getColumna()] = false;
+            listaEnvios.eliminarEnvio(envio.getLocalizador());
+            return true;
+        }
         return false;
     }
 
@@ -141,18 +149,17 @@ public class Porte {
      *  Cidonia(CID) M1 (01/01/2024 11:00:05) en Planet Express One(EP-245732X) por 13424,56 SSD, huecos libres: 10"
      */
     public String toString() {
-        return "";
+        return ("Porte " + id + " de " + origen.toStringSimple() + " " + origen.getCodigo() + " (" + salida + ") a " +
+                destino.toStringSimple() + " " + destino.getCodigo() + " (" + llegada + ") en " + nave + " por " + precio + " SSD, huecos libres: " + numHuecosLibres());
     }
-
 
     /**
      * TODO: Devuelve una cadena con información abreviada del vuelo
      * @return ejemplo del formato -> "Porte PM0066 de GGT M5 (01/01/2023 08:15:00) a CID M1 (01/01/2024 11:00:05)"
      */
     public String toStringSimple() {
-        return "";
+        return "Porte " + id + " de " + origen.getIniciales() + " " + origen.getCodigo() + " (" + salida + ") a " + destino.getIniciales() + " " + destino.getCodigo() + " (" + llegada + ")";
     }
-
 
     /**
      * TODO: Devuelve true si el código origen, destino y fecha son los mismos que el porte
@@ -162,9 +169,8 @@ public class Porte {
      * @return
      */
     public boolean coincide(String codigoOrigen, String codigoDestino, Fecha fecha) {
-        return ;
+        return (codigoOrigen == origen.getCodigo() && codigoDestino == origen.getCodigo() && fecha == salida);
     }
-
 
     /**
      * TODO: Muestra la matriz de huecos del porte, ejemplo:
@@ -176,8 +182,26 @@ public class Porte {
      *     10[ ][ ][ ]
      */
     public void imprimirMatrizHuecos() {
-        System.out.print("  ");
+        char val, letras[] = Utilidades.getLetras();
 
+        // Letras superiores
+        System.out.print("  ");
+        for (int o = 0; o < huecos[0].length; o++) {
+            System.out.printf("%3c ", letras[o]);
+        }
+        System.out.println();
+
+        for (int i = 0; i < huecos.length; i++) {
+            // Numeros laterales
+            System.out.printf(" %d", i+1);
+
+            // Huecos
+            for (int k = 0; k < huecos[i].length; k++) {
+                val = huecos[i][k] ? 'X' : ' ';
+                System.out.printf("[%c] ", val);
+            }
+            System.out.println();
+        }
     }
 
     /**
@@ -188,14 +212,34 @@ public class Porte {
      */
     public boolean generarListaEnvios(String fichero) {
         PrintWriter pw = null;
-        try {
+        Envio envio = null;
+        Cliente cliente = null;
+        char letras[] = Utilidades.getLetras();
 
+        try {
+            pw = new PrintWriter(new FileWriter(fichero, true));
+
+            pw.println("--------------------------------------------------");
+            pw.println("-------- Lista de envíos del porte " + id + "--------");
+            pw.println("--------------------------------------------------");
+            pw.println("Hueco\t\tCliente");
+            for (int i = 0; i < huecos.length; i++) {
+                for (int k = 0; k < huecos[i].length; k++) {
+                    if (huecos[i][k]) {
+                        envio = listaEnvios.buscarEnvio(id, i, k);
+                        cliente = envio.getCliente();
+                        pw.printf("%2d%1c\t\t%s %s, %s\n",envio.getFila(),letras[envio.getColumna()],cliente.getNombre(),cliente.getApellidos(),cliente.getEmail());
+                    } else {
+                        pw.printf("%2d%1c\n",i+1,letras[k]);
+                    }
+                }
+            }
             return true;
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }
-
 
     /**
      * TODO: Genera un ID de porte. Este consistirá en una cadena de 6 caracteres, de los cuales los dos primeros
@@ -205,7 +249,7 @@ public class Porte {
      * @return ejemplo -> "PM0123"
      */
     public static String generarID(Random rand) {
-        return "PM";
+        return String.format("PM%04d",rand.nextInt(10000));
     }
 
     /**
@@ -224,7 +268,6 @@ public class Porte {
                                   ListaPuertosEspaciales puertosEspaciales,
                                   ListaNaves naves,
                                   ListaPortes portes) {
-
         return null;
     }
 }
