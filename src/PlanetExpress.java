@@ -29,11 +29,11 @@ public class PlanetExpress {
      * @param maxEnviosPorCliente Máximo número de envíos por cliente.
      */
     public PlanetExpress(int maxPuertosEspaciales, int maxNaves, int maxPortes, int maxClientes, int maxEnviosPorCliente) {
-
-
-
-
-
+        this.maxPuertosEspaciales = maxPuertosEspaciales;
+        this.maxNaves = maxNaves;
+        this.maxPortes = maxPortes;
+        this.maxClientes = maxClientes;
+        this.maxEnviosPorCliente = maxEnviosPorCliente;
     }
 
 
@@ -155,7 +155,7 @@ public class PlanetExpress {
             opcion = menu(teclado);
             switch (opcion) {
                 case 1:     // TODO: Alta de Porte
-                    Porte.altaPorte(teclado,
+                    Porte porte = Porte.altaPorte(teclado,
                             new Random(),
                             new ListaPuertosEspaciales(Integer.getInteger(args[0])),
                             new ListaNaves(Integer.getInteger(args[1])),
