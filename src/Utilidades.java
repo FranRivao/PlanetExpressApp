@@ -31,6 +31,32 @@ public class Utilidades {
     }
 
     /**
+     * @param teclado
+     * @param mensaje
+     * @param minimo
+     * @param maximo
+     * @return int numero
+     */
+    public static int leerNumeroSinMensajeError(Scanner teclado, String mensaje, int minimo, int maximo) {
+        int numero;
+        do {
+            System.out.println(mensaje);
+            numero = teclado.nextInt();
+        } while (numero > maximo || numero < minimo);
+        return numero;
+    }
+
+    /**
+     * @param teclado
+     * @param mensaje
+     * @return int numero
+     */
+    public static int leerNumeroSinLimites(Scanner teclado, String mensaje) {
+        System.out.println(mensaje);
+        return teclado.nextInt();
+    }
+
+    /**
      * TODO: Solicita un número repetidamente hasta que se introduzca uno correcto (dentro de los límites)
      * @param teclado
      * @param mensaje
@@ -169,5 +195,32 @@ public class Utilidades {
     public static char[] getLetras() {
         char letras[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
         return letras;
+    }
+
+    /**
+     * @param teclado
+     * @return [dia, mes, año, segundo, minuto, hora]
+     */
+    public static int [] pedirFecha(Scanner teclado) {
+        int fecha[] = new int[6];
+        while (fecha[0] < 1 || fecha[0] > Fecha.DIAS_MES) {
+            fecha[0] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese día: ", 1, Fecha.DIAS_MES);
+        }
+        while (fecha[1] < 1 || fecha[1] > Fecha.MESES_ANIO) {
+            fecha[1] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese mes: ", 1, 12);
+        }
+        while (fecha[2] < Fecha.PRIMER_ANIO || fecha[2] > Fecha.ULTIMO_ANIO) {
+            fecha[2] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese año: ", Fecha.PRIMER_ANIO, Fecha.ULTIMO_ANIO);
+        }
+        while (fecha[3] < 1 || fecha[3] > Fecha.SEGUNDOS_MINUTO) {
+            fecha[3] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese segundo: ", 1, Fecha.SEGUNDOS_MINUTO);
+        }
+        while (fecha[4] < 1 || fecha[4] > Fecha.MINUTOS_HORA) {
+            fecha[4] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese minuto: ", 1, Fecha.MINUTOS_HORA);
+        }
+        while (fecha[5] < 1 || fecha[5] > Fecha.HORAS_DIA) {
+            fecha[5] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese hora: ", 1, Fecha.HORAS_DIA);
+        }
+        return fecha;
     }
 }
