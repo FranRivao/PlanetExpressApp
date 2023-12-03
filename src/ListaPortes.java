@@ -132,7 +132,7 @@ public class ListaPortes {
         try {
             pw = new PrintWriter(new FileWriter(fichero, true));
             for (int i = 0; i < portes.length; i++) {
-                pw.printf("%s;%s;%s;%d;%s;%s;%d;%s;%f",
+                pw.printf("%s;%s;%s;%d;%s;%s;%d;%s;%f\n",
                         portes[i].getID(),
                         portes[i].getNave().getMatricula(),
                         portes[i].getOrigen().getCodigo(),
