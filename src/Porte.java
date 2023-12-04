@@ -268,6 +268,101 @@ public class Porte {
                                   ListaPuertosEspaciales puertosEspaciales,
                                   ListaNaves naves,
                                   ListaPortes portes) {
-        return null;
+        boolean cancelar = false;
+        // GENERAR ID
+        String id;
+        do {
+            id = generarID(rand);
+        } while(portes.buscarPorte(id) != null);
+
+        // PUERTO ORIGEN
+        String origen;
+        PuertoEspacial puertoOrigen = null;
+        while (puertoOrigen == null && !cancelar) {
+            origen = Utilidades.leerCadena(teclado,"Ingrese código de puerto Origen: ");
+            puertoOrigen = puertosEspaciales.buscarPuertoEspacial(origen);
+
+            if (origen.toLowerCase() == "cancelar") {
+                cancelar = true;
+            } else if (puertoOrigen == null) {
+                System.out.println("\tCódigo de puerto no encontrado.");
+            }
+        }
+
+        // MUELLE ORIGEN
+        int muelleOrigen = -1;
+        while ((muelleOrigen < 1 || muelleOrigen > puertoOrigen.getMuelles()) && !cancelar) {
+            muelleOrigen = Utilidades.leerNumero(teclado,"Ingrese el muelle de Origen (1 - " + puertoOrigen.getMuelles() + "): ",1,4);
+        }
+
+        // PUERTO DESTINO
+        String destino;
+        PuertoEspacial puertoDestino = null;
+        while (puertoDestino == null && !cancelar) {
+            destino = Utilidades.leerCadena(teclado,"Ingrese código de puerto Destino: ");
+            puertoDestino = puertosEspaciales.buscarPuertoEspacial(destino);
+
+            if (destino.toLowerCase() == "cancelar") {
+                cancelar = true;
+            } else if (puertoDestino == null) {
+                System.out.println("\tCódigo de puerto no encontrado.");
+            }
+        }
+
+        // MUELLE DESTINO
+        int muelleDestino = -1;
+        while ((muelleDestino < 1 || muelleDestino > puertoDestino.getMuelles()) && !cancelar) {
+            muelleDestino = Utilidades.leerNumero(teclado,"Ingrese el Terminal Destino (1 - " + puertoDestino.getMuelles() + "): ",1,4);
+        }
+
+        // NAVE
+        String matricula;
+        Nave nave = null;
+        while ((nave == null || nave.getAlcance() < puertoOrigen.distancia(puertoDestino)) && !cancelar) {
+            matricula = Utilidades.leerCadena(teclado, "Ingrese matrícula de la nave");
+            nave = naves.buscarNave(matricula);
+
+            if (matricula.toLowerCase() == "cancelar") {
+                cancelar = true;
+            } else if (nave == null) {
+                System.out.println("\tMatricula de nave no encontrada");
+            } else if (nave.getAlcance() < puertoOrigen.distancia(puertoDestino)) {
+                System.out.println("\tNave seleccionada con alcance insuficiente");
+            }
+        }
+
+        // FECHA SALIDA Y LLEGADA
+        int fechaSalidaArr[];
+        Fecha fechaSalida = null;
+        int fechaLlegadaArr[];
+        Fecha fechaLlegada = null;
+        while (fechaSalida.anterior(fechaLlegada)) {
+            System.out.println("Introduzca la fecha de salida:");
+            fechaSalidaArr = Utilidades.pedirFecha(teclado);
+            fechaSalida = new Fecha(fechaSalidaArr[0], fechaSalidaArr[1], fechaSalidaArr[2], fechaSalidaArr[3], fechaSalidaArr[4], fechaSalidaArr[5]);
+
+            System.out.println("Introduzca la fecha de llegada:");
+            fechaLlegadaArr = Utilidades.pedirFecha(teclado);
+            fechaLlegada = new Fecha(fechaLlegadaArr[0], fechaLlegadaArr[1], fechaLlegadaArr[2], fechaLlegadaArr[3], fechaLlegadaArr[4], fechaLlegadaArr[5]);
+
+            if (fechaSalida.anterior(fechaLlegada)){
+                System.out.println("\tLlegada debe ser posterior a salida");
+            }
+        }
+
+        // PRECIO
+        double precio = -1;
+        while (precio < 0) {
+            precio = Utilidades.leerNumeroSinLimites(teclado, "Ingrese precio de pasaje: ");
+        }
+
+        // RETURN
+        if (!cancelar) {
+            Porte porte = new Porte(id, nave, puertoOrigen, muelleOrigen, fechaSalida, puertoDestino, muelleDestino, fechaLlegada, precio);
+            System.out.println("\tPorte " + id + " creado correctamente");
+            return porte;
+        } else {
+            return null;
+        }
     }
 }
