@@ -113,7 +113,7 @@ public class ListaNaves {
     public boolean escribirNavesCsv(String nombre) {
         PrintWriter pw = null;
         try {
-            pw=new PrintWriter(new PrintWriter(new FileWriter(nombre,true)));
+            pw=new PrintWriter(new FileWriter(nombre,true));
             for(int i=0; i< naves.length;i++){
                 pw.println(naves[i].toString());
             }
