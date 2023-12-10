@@ -1,4 +1,6 @@
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
 import java.util.Scanner;
@@ -76,9 +78,8 @@ public class Envio {
     }
 
     // TODO: Cancela este envío, eliminándolo de la lista de envíos del porte y del cliente correspondiente
-    //No se hacerlo
     public boolean cancelar() {
-
+        return porte.desocuparHueco(localizador);
     }
 
     /**
@@ -100,11 +101,23 @@ public class Envio {
      * Precio: 13424,56 SSD
      */
     public boolean generarFactura(String fichero) {
+        PrintWriter pw = null;
         try {
-
-
+            pw = new PrintWriter(new FileWriter(fichero,true));
+            pw.println("-----------------------------------------------------");
+            pw.println("--------- Factura del envío " + localizador + " ---------");
+            pw.println("-----------------------------------------------------");
+            pw.println("Porte: " + porte.getID());
+            pw.println("Origen: " + porte.getOrigen().toStringSimple());
+            pw.println("Destino: " + porte.getDestino().toStringSimple());
+            pw.println("Salida: " + porte.getSalida().toString());
+            pw.println("Llegada: " + porte.getLlegada().toString());
+            pw.println("Cliente: " + cliente.toString());
+            pw.println("Hueco: " + fila + columna);
+            pw.println("Precio: " + precio + " SSD");
             return true;
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }
@@ -120,9 +133,12 @@ public class Envio {
      * @return
      */
     public static String generarLocalizador(Random rand, String idPorte) {
+        char [] letras = Utilidades.getLetras();
         StringBuilder localizador = new StringBuilder(idPorte);
-
-
+        for (int i = 0; i < 9; i++) {
+            int numLetra = rand.nextInt(letras.length);
+            localizador.append(letras[numLetra-1]);
+        }
         return localizador.toString();
     }
 
