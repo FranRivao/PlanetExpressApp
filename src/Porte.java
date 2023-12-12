@@ -182,12 +182,12 @@ public class Porte {
      *     10[ ][ ][ ]
      */
     public void imprimirMatrizHuecos() {
-        char val, letras[] = Utilidades.getLetras();
+        char val;
 
         // Letras superiores
         System.out.print("  ");
         for (int o = 0; o < huecos[0].length; o++) {
-            System.out.printf("%3c ", letras[o]);
+            System.out.printf("%3c ", (char)o+'A');
         }
         System.out.println();
 
@@ -211,10 +211,9 @@ public class Porte {
      * @return
      */
     public boolean generarListaEnvios(String fichero) {
-        PrintWriter pw = null;
-        Envio envio = null;
-        Cliente cliente = null;
-        char letras[] = Utilidades.getLetras();
+        PrintWriter pw;
+        Envio envio;
+        Cliente cliente;
 
         try {
             pw = new PrintWriter(new FileWriter(fichero, true));
@@ -228,9 +227,9 @@ public class Porte {
                     if (huecos[i][k]) {
                         envio = listaEnvios.buscarEnvio(id, i, k);
                         cliente = envio.getCliente();
-                        pw.printf("%2d%1c\t\t%s %s, %s\n",envio.getFila(),letras[envio.getColumna()],cliente.getNombre(),cliente.getApellidos(),cliente.getEmail());
+                        pw.printf("%2d%1c\t\t%s %s, %s\n",envio.getFila(),(char)envio.getColumna()+'A',cliente.getNombre(),cliente.getApellidos(),cliente.getEmail());
                     } else {
-                        pw.printf("%2d%1c\n",i+1,letras[k]);
+                        pw.printf("%2d%1c\n",i+1,(char)k+'A');
                     }
                 }
             }
