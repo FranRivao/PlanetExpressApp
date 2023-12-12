@@ -133,11 +133,10 @@ public class Envio {
      * @return
      */
     public static String generarLocalizador(Random rand, String idPorte) {
-        char [] letras = Utilidades.getLetras();
         StringBuilder localizador = new StringBuilder(idPorte);
         for (int i = 0; i < 9; i++) {
-            int numLetra = rand.nextInt(letras.length);
-            localizador.append(letras[numLetra-1]);
+            int numLetra = rand.nextInt(26);
+            localizador.append((char)numLetra+'A');
         }
         return localizador.toString();
     }
