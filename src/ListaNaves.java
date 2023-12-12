@@ -146,11 +146,7 @@ public class ListaNaves {
 
         try {
             sc = new Scanner(new FileReader(fichero));
-            int pos, puntoComas, lineas = 0;
-
-            while (sc.hasNext()) {
-                lineas++;
-            }
+            int pos, puntoComas = 0;
 
             while (sc.hasNext()) {
                 String cadena = sc.nextLine();
