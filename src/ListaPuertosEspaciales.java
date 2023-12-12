@@ -118,7 +118,6 @@ public class ListaPuertosEspaciales {
         ListaPuertosEspaciales listaPuertosEspaciales = new ListaPuertosEspaciales(capacidad);
         Scanner sc = null;
         String nombre, codigo, radio, azimutm, polar, numMuelles;
-        nombre = codigo = radio = azimutm = polar = numMuelles = "";
 
         try {
             sc = new Scanner(new FileReader(fichero));

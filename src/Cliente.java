@@ -95,6 +95,7 @@ public class Cliente {
      * @return
      */
     public static boolean correctoEmail(String email) {
-        return false;
+        String [] emailSplit = email.split("@");
+        return emailSplit.length > 1 && emailSplit[0].matches("[A-Za-z1-9/.]+") && (emailSplit[1].equals("planetexpress.com") || emailSplit[1].equals("upm.es"));
     }
 }

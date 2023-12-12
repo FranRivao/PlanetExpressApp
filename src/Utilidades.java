@@ -22,29 +22,10 @@ public class Utilidades {
         do {
             System.out.println(mensaje);
             numero = teclado.nextInt();
-
-            if (numero > maximo || numero < minimo) {
-                System.out.println("El numero debe ser mayor o igual que " + minimo + " y menor o igual que " + maximo);
-            }
         } while (numero > maximo || numero < minimo);
         return numero;
     }
 
-    /**
-     * @param teclado
-     * @param mensaje
-     * @param minimo
-     * @param maximo
-     * @return int numero
-     */
-    public static int leerNumeroSinMensajeError(Scanner teclado, String mensaje, int minimo, int maximo) {
-        int numero;
-        do {
-            System.out.println(mensaje);
-            numero = teclado.nextInt();
-        } while (numero > maximo || numero < minimo);
-        return numero;
-    }
 
     /**
      * @param teclado
@@ -69,10 +50,6 @@ public class Utilidades {
         do {
             System.out.println(mensaje);
             numero = teclado.nextLong();
-
-            if (numero > maximo || numero < minimo) {
-                System.out.println("El numero debe ser mayor o igual que " + minimo + " y menor o igual que " + maximo);
-            }
         } while (numero > maximo || numero < minimo);
         return numero;
     }
@@ -90,10 +67,6 @@ public class Utilidades {
         do {
             System.out.println(mensaje);
             numero = teclado.nextDouble();
-
-            if (numero > maximo || numero < minimo) {
-                System.out.println("El numero debe ser mayor o igual que " + minimo + " y menor o igual que " + maximo);
-            }
         } while (numero > maximo || numero < minimo);
         return numero;
     }
@@ -164,18 +137,12 @@ public class Utilidades {
 
         do {
             System.out.println(mensaje);
-            System.out.print("Dia: ");
-            dia = teclado.nextInt();
-            System.out.print("\nMes: ");
-            mes = teclado.nextInt();
-            System.out.print("\nAño: ");
-            anio = teclado.nextInt();
-            System.out.print("\nHora: ");
-            hora = teclado.nextInt();
-            System.out.print("\nMinuto: ");
-            minuto = teclado.nextInt();
-            System.out.print("\nSegundo: ");
-            segundo = teclado.nextInt();
+            dia = leerNumero(teclado, "Ingrese día: ", 1, Fecha.DIAS_MES);
+            mes = leerNumero(teclado, "Ingrese mes: ", 1, 12);
+            anio = leerNumero(teclado, "Ingrese año: ", Fecha.PRIMER_ANIO, Fecha.ULTIMO_ANIO);
+            hora = leerNumero(teclado, "Ingrese segundo: ", 1, Fecha.SEGUNDOS_MINUTO);
+            minuto = leerNumero(teclado, "Ingrese minuto: ", 1, Fecha.MINUTOS_HORA);
+            segundo = leerNumero(teclado, "Ingrese hora: ", 1, Fecha.HORAS_DIA);
         } while (!Fecha.comprobarFecha(dia, mes, anio) || !Fecha.comprobarHora(hora, minuto, segundo));
 
         return new Fecha(dia, mes, anio, hora, minuto, segundo);
@@ -195,32 +162,5 @@ public class Utilidades {
     public static char[] getLetras() {
         char letras[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
         return letras;
-    }
-
-    /**
-     * @param teclado
-     * @return [dia, mes, año, segundo, minuto, hora]
-     */
-    public static int [] pedirFecha(Scanner teclado) {
-        int fecha[] = new int[6];
-        while (fecha[0] < 1 || fecha[0] > Fecha.DIAS_MES) {
-            fecha[0] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese día: ", 1, Fecha.DIAS_MES);
-        }
-        while (fecha[1] < 1 || fecha[1] > Fecha.MESES_ANIO) {
-            fecha[1] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese mes: ", 1, 12);
-        }
-        while (fecha[2] < Fecha.PRIMER_ANIO || fecha[2] > Fecha.ULTIMO_ANIO) {
-            fecha[2] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese año: ", Fecha.PRIMER_ANIO, Fecha.ULTIMO_ANIO);
-        }
-        while (fecha[3] < 1 || fecha[3] > Fecha.SEGUNDOS_MINUTO) {
-            fecha[3] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese segundo: ", 1, Fecha.SEGUNDOS_MINUTO);
-        }
-        while (fecha[4] < 1 || fecha[4] > Fecha.MINUTOS_HORA) {
-            fecha[4] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese minuto: ", 1, Fecha.MINUTOS_HORA);
-        }
-        while (fecha[5] < 1 || fecha[5] > Fecha.HORAS_DIA) {
-            fecha[5] = Utilidades.leerNumeroSinMensajeError(teclado, "Ingrese hora: ", 1, Fecha.HORAS_DIA);
-        }
-        return fecha;
     }
 }

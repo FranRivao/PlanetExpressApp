@@ -69,7 +69,7 @@ public class ListaEnvios {
         int pos = 0;
         Envio envio = null;
         while (envios[pos] != null && envio == null) {
-            if (envios[pos].getLocalizador() == localizador) {
+            if (envios[pos].getLocalizador().equals(localizador)) {
                 envio = envios[pos];
             }
             pos++;
@@ -89,7 +89,7 @@ public class ListaEnvios {
         int pos = 0;
         Envio envio = null;
         while (envios[pos] != null && envio == null) {
-            if (envios[pos].getPorte().getID() == idPorte && envios[pos].getFila() == fila && envios[pos].getColumna() == columna) {
+            if (envios[pos].getPorte().getID().equals(idPorte) && envios[pos].getFila() == fila && envios[pos].getColumna() == columna) {
                 envio = envios[pos];
             }
             pos++;
@@ -106,7 +106,7 @@ public class ListaEnvios {
     public boolean eliminarEnvio(String localizador) {
         boolean res = true;
         int pos = 0;
-        while (pos < envios.length && envios[pos].getLocalizador() != localizador) {
+        while (pos < envios.length && !envios[pos].getLocalizador().equals(localizador)) {
             pos++;
         }
         for (int i = pos; i < envios.length - 1; i++) {

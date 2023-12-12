@@ -1,3 +1,4 @@
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -166,9 +167,66 @@ public class ListaPortes {
      */
     public static ListaPortes leerPortesCsv(String fichero, int capacidad, ListaPuertosEspaciales puertosEspaciales, ListaNaves naves) {
         ListaPortes listaPortes = new ListaPortes(capacidad);
+        Scanner sc = null;
+        String id, matricula, codOrigen, muelleOrigen, salida, codDestino, muelleDestino, llegada, precio;
         try {
+            sc = new Scanner(new FileReader(fichero));
+            int pos, puntoComas;
 
-        } catch (Exception e) {
+            while (sc.hasNext()) {
+                String cadena = sc.nextLine();
+                id = "";
+                matricula = "";
+                codOrigen = "";
+                muelleOrigen = "";
+                salida = "";
+                codDestino = "";
+                muelleDestino = "";
+                llegada = "";
+                precio = "";
+                pos = 0;
+                puntoComas = 0;
+
+                while (pos < cadena.length()) {
+                    if (cadena.charAt(pos) != ';') {
+                        switch (puntoComas) {
+                            case 0:
+                                id += cadena.charAt(pos);
+                                break;
+                            case 1:
+                                matricula += cadena.charAt(pos);
+                                break;
+                            case 2:
+                                codOrigen += cadena.charAt(pos);
+                                break;
+                            case 3:
+                                muelleOrigen += cadena.charAt(pos);
+                                break;
+                            case 4:
+                                salida += cadena.charAt(pos);
+                                break;
+                            case 5:
+                                codDestino += cadena.charAt(pos);
+                                break;
+                            case 6:
+                                muelleDestino += cadena.charAt(pos);
+                                break;
+                            case 7:
+                                llegada += cadena.charAt(pos);
+                                break;
+                            case 8:
+                                precio += cadena.charAt(pos);
+                                break;
+                        }
+                    } else puntoComas++;
+                    pos++;
+                }
+                listaPortes.insertarPorte(new Porte(
+                    id, naves.buscarNave(matricula), puertosEspaciales.buscarPuertoEspacial(codOrigen), Integer.parseInt(muelleOrigen), Fecha.fromString(salida), puertosEspaciales.buscarPuertoEspacial(codDestino), Integer.parseInt(muelleDestino), Fecha.fromString(llegada), Double.parseDouble(precio)
+                ));
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
             return null;
         }
         return listaPortes;

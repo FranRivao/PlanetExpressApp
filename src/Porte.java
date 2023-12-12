@@ -321,7 +321,7 @@ public class Porte {
             matricula = Utilidades.leerCadena(teclado, "Ingrese matrícula de la nave");
             nave = naves.buscarNave(matricula);
 
-            if (matricula.toLowerCase() == "cancelar") {
+            if (matricula.toLowerCase().equals("cancelar")) {
                 cancelar = true;
             } else if (nave == null) {
                 System.out.println("\tMatricula de nave no encontrada");
@@ -331,23 +331,16 @@ public class Porte {
         }
 
         // FECHA SALIDA Y LLEGADA
-        int fechaSalidaArr[];
-        Fecha fechaSalida = null;
-        int fechaLlegadaArr[];
-        Fecha fechaLlegada = null;
-        while (fechaSalida.anterior(fechaLlegada)) {
-            System.out.println("Introduzca la fecha de salida:");
-            fechaSalidaArr = Utilidades.pedirFecha(teclado);
-            fechaSalida = new Fecha(fechaSalidaArr[0], fechaSalidaArr[1], fechaSalidaArr[2], fechaSalidaArr[3], fechaSalidaArr[4], fechaSalidaArr[5]);
-
-            System.out.println("Introduzca la fecha de llegada:");
-            fechaLlegadaArr = Utilidades.pedirFecha(teclado);
-            fechaLlegada = new Fecha(fechaLlegadaArr[0], fechaLlegadaArr[1], fechaLlegadaArr[2], fechaLlegadaArr[3], fechaLlegadaArr[4], fechaLlegadaArr[5]);
+        Fecha fechaSalida;
+        Fecha fechaLlegada;
+        do {
+            fechaSalida = Utilidades.leerFechaHora(teclado, "Introduzca la fecha de salida:");
+            fechaLlegada = Utilidades.leerFechaHora(teclado, "Introduzca la fecha de llegada:");
 
             if (fechaSalida.anterior(fechaLlegada)){
                 System.out.println("\tLlegada debe ser posterior a salida");
             }
-        }
+        } while (fechaSalida.anterior(fechaLlegada));
 
         // PRECIO
         double precio = -1;

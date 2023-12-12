@@ -70,12 +70,10 @@ public class ListaClientes {
     public Cliente seleccionarCliente(Scanner teclado, String mensaje) {
         Cliente cliente = null;
         String email;
-        String [] emailSplit;
         // PEDIR EMAIL
         do {
             email = Utilidades.leerCadena(teclado, "Email del cliente: ");
-            emailSplit = email.split("@");
-        } while(emailSplit.length <= 1 || !emailSplit[0].matches("[A-Za-z1-9//.]+") || (!emailSplit[1].equals("planetexpress.com") && !emailSplit[1].equals("upm.es")));
+        } while(!Cliente.correctoEmail(email));
 
         // BUSCAR CLIENTE
         int pos = 0;
