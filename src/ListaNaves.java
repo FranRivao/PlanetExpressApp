@@ -1,4 +1,6 @@
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -139,14 +141,57 @@ public class ListaNaves {
      */
     public static ListaNaves leerNavesCsv(String fichero, int capacidad) {
         ListaNaves listaNaves = new ListaNaves(capacidad);
+        String marca, modelo, matricula, filas, columnas, alcance;
         Scanner sc = null;
+
         try {
+            sc = new Scanner(new FileReader(fichero));
+            int pos, puntoComas, lineas = 0;
 
-        } catch (Exception e) {
-            return null;
+            while (sc.hasNext()) {
+                lineas++;
+            }
+
+            while (sc.hasNext()) {
+                String cadena = sc.nextLine();
+                marca = modelo = matricula = filas = columnas = alcance = ""; pos = puntoComas = 0;
+
+                while (pos < cadena.length()) {
+                    if (cadena.charAt(pos) != ';') {
+                        switch (puntoComas) {
+                            case 0:
+                                marca += cadena.charAt(pos);
+                                break;
+                            case 1:
+                                modelo += cadena.charAt(pos);
+                                break;
+                            case 2:
+                                matricula += cadena.charAt(pos);
+                                break;
+                            case 3:
+                                filas += cadena.charAt(pos);
+                                break;
+                            case 4:
+                                columnas += cadena.charAt(pos);
+                                break;
+                            case 5:
+                                alcance += cadena.charAt(pos);
+                                break;
+                        }
+                    } else puntoComas++;
+                    pos++;
+                }
+
+                listaNaves.insertarNave(new Nave(marca, modelo, matricula, Integer.parseInt(filas), Integer.parseInt(columnas), Double.parseDouble(alcance)));
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         } finally {
-
+            if (sc != null) {
+                sc.close();
+            }
         }
+
         return listaNaves;
     }
 }
