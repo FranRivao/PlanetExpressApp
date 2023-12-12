@@ -1,7 +1,4 @@
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Scanner;
 
 /**
@@ -119,13 +116,43 @@ public class ListaClientes {
      * @return lista de clientes
      */
     public static ListaClientes leerClientesCsv(String fichero, int capacidad, int maxEnviosPorCliente) {
+        ListaClientes listaClientes = new ListaClientes(capacidad);
+        Scanner sc = null;
+        String nombre, apellidos, email;
 
         try {
+            sc = new Scanner(new FileReader(fichero));
+            int pos, puntoComas = 0;
 
-        } catch (FileNotFoundException e) {
-            return null;
+            while (sc.hasNext()) {
+                String cadena = sc.nextLine();
+                nombre = apellidos = email = ""; pos = puntoComas = 0;
+
+                while (pos < cadena.length()) {
+                    if (cadena.charAt(pos) != ';') {
+                        switch (puntoComas) {
+                            case 0:
+                                nombre += cadena.charAt(pos);
+                                break;
+                            case 1:
+                                apellidos += cadena.charAt(pos);
+                                break;
+                            case 2:
+                                email += cadena.charAt(pos);
+                                break;
+                        }
+                    } else puntoComas++;
+                    pos++;
+                }
+
+                listaClientes.insertarCliente(new Cliente(nombre, apellidos, email, maxEnviosPorCliente));
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         } finally {
-
+            if (sc != null) {
+                sc.close();
+            }
         }
         return listaClientes;
     }
