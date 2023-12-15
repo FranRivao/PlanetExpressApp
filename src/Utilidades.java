@@ -105,15 +105,15 @@ public class Utilidades {
 
         do {
             System.out.println(mensaje);
-            System.out.print("Dia: ");
+            System.out.print("Ingrese día: ");
             dia = teclado.nextInt();
-            System.out.print("Mes: ");
+            System.out.print("Ingrese mes: ");
             mes = teclado.nextInt();
-            System.out.print("Año: ");
+            System.out.print("Ingrese año: ");
             anio = teclado.nextInt();
 
             if (!Fecha.comprobarFecha(dia, mes, anio)) {
-                System.out.println("La fecha no es valida");
+                System.out.println("\tFecha introducida incorrecta");
             }
         } while (!Fecha.comprobarFecha(dia, mes, anio));
 
