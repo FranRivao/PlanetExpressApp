@@ -89,10 +89,27 @@ public class PlanetExpress {
      * @return
      */
     public ListaPortes buscarPorte(Scanner teclado) {
+        String codigoOrigen = "", codigoDestino = "";
+        Fecha fecha = null;
+        boolean cancelar;
 
+        do {
+            codigoOrigen = Utilidades.leerCadena(teclado, "Ingrese código de puerto Origen: ");
+            cancelar = codigoOrigen.toLowerCase() == "cancelar";
+        } while (!codigoOrigen.matches("[A-Z][A-Z][/-][0-9]") && !cancelar);
 
+        while (!codigoOrigen.matches("[A-Z][A-Z][/-][0-9]") && !cancelar) {
+            codigoDestino = Utilidades.leerCadena(teclado, "Ingrese código de puerto Destino: ");
+            cancelar = codigoDestino.toLowerCase() == "cancelar";
+        }
 
-        return listaPortes.buscarPortes(codigoOrigen, codigoDestino, fecha);
+        while (!codigoOrigen.matches("[A-Z][A-Z][/-][0-9]") && !cancelar) {
+            fecha = Utilidades.leerFecha(teclado, "Fecha de Salida: ");
+        }
+
+        if (!cancelar) {
+            return listaPortes.buscarPortes(codigoOrigen, codigoDestino, fecha);
+        } else return null;
     }
 
 
@@ -148,6 +165,7 @@ public class PlanetExpress {
             return;
         }
 
+        PlanetExpress app = new PlanetExpress(Integer.getInteger(args[0]), Integer.getInteger(args[1]), Integer.getInteger(args[2]), Integer.getInteger(args[3]), Integer.getInteger(args[4]));
         Scanner teclado = new Scanner(System.in);
         int opcion;
 
@@ -157,19 +175,44 @@ public class PlanetExpress {
                 case 1:     // TODO: Alta de Porte
                     Porte porte = Porte.altaPorte(teclado,
                             new Random(),
-                            new ListaPuertosEspaciales(Integer.getInteger(args[0])),
-                            new ListaNaves(Integer.getInteger(args[1])),
-                            new ListaPortes(Integer.getInteger(args[2]))
+                            new ListaPuertosEspaciales(app.maxPuertosEspaciales),
+                            new ListaNaves(app.maxNaves),
+                            new ListaPortes(app.maxPortes)
                     );
+                    if (porte != null) {
+                        System.out.println(app.listaPortes.insertarPorte(porte) ?
+                                "\tPorte " + porte.getID() + " creado correctamente" :
+                                "Ha ocurrido un error al crear el porte");
+                    }
                     break;
                 case 2:     // TODO: Alta de Cliente
-                    Cliente.altaCliente(teclado,
-                            new ListaClientes(Integer.getInteger(args[3])),
-                            Integer.getInteger(args[4])
+                    Cliente cliente = Cliente.altaCliente(teclado,
+                            new ListaClientes(app.maxClientes),
+                            app.maxEnviosPorCliente
                     );
+                    if (cliente != null) {
+                        System.out.println(app.listaClientes.insertarCliente(cliente) ?
+                                "\tCliente con email " + cliente.getEmail() + " creado correctamente" :
+                                "Ha ocurrido un error al crear el cliente");
+                    }
                     break;
                 case 3:     // TODO: Buscar Porte
+                    app.listaPortes = app.buscarPorte(teclado);
+                    if (app.listaPortes != null) {
+                        app.listaPortes.listarPortes();
 
+                        String idPorte = "";
+                        boolean cancelar = false;
+                        while(app.listaPortes.buscarPorte(idPorte) == null && !cancelar) {
+                            idPorte = Utilidades.leerCadena(teclado, "Seleccione un porte: ");
+                            cancelar = idPorte.toLowerCase() == "cancelar";
+                            if (app.listaPortes.buscarPorte(idPorte) == null  && !cancelar) {
+                                System.out.println("\tPorte no encontrado");
+                            }
+                        }
+                        Porte porteBuscado =  app.listaPortes.buscarPorte(idPorte);
+                        app.contratarEnvio(teclado, new Random(),porteBuscado);
+                    }
                     break;
                 case 4:     // TODO: Listado de envíos de un cliente
 
