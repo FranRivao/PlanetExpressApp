@@ -81,9 +81,12 @@ public class Cliente {
      * @return Cliente
      */
     public static Cliente altaCliente(Scanner teclado, ListaClientes clientes, int maxEnvios) {
-
-
-
+        String nombre, apellidos, email;
+        do {
+            nombre = Utilidades.leerCadena(teclado, "Nombre: ");
+            apellidos = Utilidades.leerCadena(teclado, "Apellidos: ");
+            email = Utilidades.leerCadena(teclado, "Email: ");
+        } while(!correctoEmail(email) || !nombre.matches("[A-Za-z]+") || !apellidos.matches("[A-Za-z]+") || clientes.buscarClienteEmail(email) != null);
 
         return new Cliente(nombre, apellidos, email, maxEnvios);
     }
