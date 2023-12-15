@@ -350,11 +350,7 @@ public class Porte {
 
         // RETURN
         if (!cancelar) {
-            Porte porte = new Porte(id, nave, puertoOrigen, muelleOrigen, fechaSalida, puertoDestino, muelleDestino, fechaLlegada, precio);
-            System.out.println("\tPorte " + id + " creado correctamente");
-            return porte;
-        } else {
-            return null;
-        }
+            return new Porte(id, nave, puertoOrigen, muelleOrigen, fechaSalida, puertoDestino, muelleDestino, fechaLlegada, precio);
+        } else return null;
     }
 }
