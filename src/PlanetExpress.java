@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -47,9 +48,10 @@ public class PlanetExpress {
      * @param ficheroEnvios
      */
     public void cargarDatos(String ficheroPuertos, String ficheroNaves, String ficheroPortes, String ficheroClientes, String ficheroEnvios) {
-
-
-
+        listaPuertosEspaciales = ListaPuertosEspaciales.leerPuertosEspacialesCsv(ficheroPuertos, maxPuertosEspaciales);
+        listaNaves = ListaNaves.leerNavesCsv(ficheroNaves, maxNaves);
+        listaClientes = ListaClientes.leerClientesCsv(ficheroClientes, maxClientes, maxEnviosPorCliente);
+        listaPortes = ListaPortes.leerPortesCsv(ficheroPortes, maxPortes, listaPuertosEspaciales, listaNaves);
     }
 
 
@@ -63,9 +65,10 @@ public class PlanetExpress {
      * @param ficheroEnvios
      */
     public void guardarDatos(String ficheroPuertos, String ficheroNaves, String ficheroPortes, String ficheroClientes, String ficheroEnvios) {
-
-
-
+        listaClientes.escribirClientesCsv(ficheroClientes);
+        listaPortes.escribirPortesCsv(ficheroPortes);
+        listaPuertosEspaciales.escribirPuertosEspacialesCsv(ficheroPuertos);
+        listaNaves.escribirNavesCsv(ficheroNaves);
     }
     public boolean maxPortesAlcanzado() {
         return listaPortes.estaLlena();
@@ -123,10 +126,32 @@ public class PlanetExpress {
      */
     public void contratarEnvio(Scanner teclado, Random rand, Porte porte) {
         if (porte != null) {
+            char valorEntrada;
+            do {
+                 valorEntrada = Utilidades.leerLetra(teclado, "¿Comprar un billete para un nuevo pasajero (n), o para uno ya existente (e)?", 'a', 'z');
+                if (valorEntrada != 'n' || valorEntrada != 'e') {
+                    System.out.println("El valor de la entrada debe ser 'n' o 'e'");
+                }
+            } while (valorEntrada != 'n' || valorEntrada != 'e');
 
+            Cliente cliente = null; String emailCliente = "";
+            if (valorEntrada == 'e') {
+                do {
+                    emailCliente = Utilidades.leerCadena(teclado, "Email del cliente: ");
+                    if (listaClientes.buscarClienteEmail(emailCliente) == null) {
+                        System.out.println("Email no encontrado");
+                    }
+                } while (listaClientes.buscarClienteEmail(emailCliente) == null);
+            } else {
+                 cliente = Cliente.altaCliente(teclado, listaClientes, maxEnviosPorCliente);
+            }
 
-
-
+            int fila = Utilidades.leerNumero(teclado, "Fila del hueco : ", 1, porte.getNave().getFilas());
+            int columna = Utilidades.leerNumero(teclado, "Columna del hueco", 1, porte.getNave().getColumnas());
+            double precio = Utilidades.leerNumero(teclado, "Precio del envío: ",1, Utilidades.maxPrecioEnvio);
+            String localizador = Envio.generarLocalizador(rand, porte.getID());
+            String email = valorEntrada == 'e' ? emailCliente : cliente.getEmail();
+            porte.ocuparHueco(new Envio(localizador, porte, listaClientes.buscarClienteEmail(email),fila, columna, precio));
         }
     }
 
@@ -165,36 +190,43 @@ public class PlanetExpress {
             return;
         }
 
-        PlanetExpress app = new PlanetExpress(Integer.getInteger(args[0]), Integer.getInteger(args[1]), Integer.getInteger(args[2]), Integer.getInteger(args[3]), Integer.getInteger(args[4]));
+        String ficheroPuertos = "ficheros/"+args[5], ficheroNaves = "ficheros/"+args[6], ficheroPortes = "ficheros/"+args[7], ficheroClientes = "ficheros/"+args[8], ficheroEnvios = "ficheros/"+args[9];
+        PlanetExpress app = new PlanetExpress(Integer.parseInt(args[0]),Integer.parseInt(args[1]),Integer.parseInt(args[2]),Integer.parseInt(args[3]),Integer.parseInt(args[4]));
         Scanner teclado = new Scanner(System.in);
+        app.cargarDatos(ficheroPuertos, ficheroNaves, ficheroPortes, ficheroClientes, ficheroEnvios);
+
         int opcion;
 
         do {
             opcion = menu(teclado);
             switch (opcion) {
                 case 1:     // TODO: Alta de Porte
-                    Porte porte = Porte.altaPorte(teclado,
-                            new Random(),
-                            new ListaPuertosEspaciales(app.maxPuertosEspaciales),
-                            new ListaNaves(app.maxNaves),
-                            new ListaPortes(app.maxPortes)
-                    );
-                    if (porte != null) {
-                        System.out.println(app.listaPortes.insertarPorte(porte) ?
-                                "\tPorte " + porte.getID() + " creado correctamente" :
-                                "Ha ocurrido un error al crear el porte");
-                    }
+                    if(!app.maxPortesAlcanzado()){
+                        Porte porte = Porte.altaPorte(teclado,
+                                new Random(),
+                                app.listaPuertosEspaciales,
+                                app.listaNaves,
+                                app.listaPortes
+                        );
+                        if (porte != null) {
+                            System.out.println(app.insertarPorte(porte) ?
+                                    "\tPorte " + porte.getID() + " creado correctamente" :
+                                    "Ha ocurrido un error al crear el porte");
+                        }
+                    } else System.out.println("No se pueden dar de alta mas portes");
                     break;
                 case 2:     // TODO: Alta de Cliente
-                    Cliente cliente = Cliente.altaCliente(teclado,
-                            new ListaClientes(app.maxClientes),
-                            app.maxEnviosPorCliente
-                    );
-                    if (cliente != null) {
-                        System.out.println(app.listaClientes.insertarCliente(cliente) ?
-                                "\tCliente con email " + cliente.getEmail() + " creado correctamente" :
-                                "Ha ocurrido un error al crear el cliente");
-                    }
+                    if(!app.maxClientesAlcanzado()) {
+                        Cliente cliente = Cliente.altaCliente(teclado,
+                                app.listaClientes,
+                                app.maxEnviosPorCliente
+                        );
+                        if (cliente != null) {
+                            System.out.println(app.insertarCliente(cliente) ?
+                                    "\tCliente con email " + cliente.getEmail() + " creado correctamente" :
+                                    "Ha ocurrido un error al crear el cliente");
+                        }
+                    } else System.out.println("No se pueden dar de alta mas clientes");
                     break;
                 case 3:     // TODO: Buscar Porte
                     app.listaPortes = app.buscarPorte(teclado);
@@ -224,6 +256,6 @@ public class PlanetExpress {
             }
         } while (opcion != 0);
 
-
+        app.guardarDatos(ficheroPuertos, ficheroNaves, ficheroPortes, ficheroClientes, ficheroEnvios);
     }
 }
