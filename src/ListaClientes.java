@@ -22,7 +22,7 @@ public class ListaClientes {
     // TODO: Devuelve el número de clientes que hay en la lista de clientes
     public int getOcupacion() {
         int pos = 0;
-        while(clientes[pos] != null) {
+        while(clientes[pos] != null && pos < clientes.length) {
             pos++;
         }
         return pos;
