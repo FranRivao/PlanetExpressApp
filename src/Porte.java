@@ -281,17 +281,18 @@ public class Porte {
             origen = Utilidades.leerCadena(teclado,"Ingrese código de puerto Origen: ");
             puertoOrigen = puertosEspaciales.buscarPuertoEspacial(origen);
 
-            if (origen.toLowerCase() == "cancelar") {
+            if (origen.equalsIgnoreCase("cancelar")) {
                 cancelar = true;
             } else if (puertoOrigen == null) {
                 System.out.println("\tCódigo de puerto no encontrado.");
+                System.out.println("A");
             }
         }
 
         // MUELLE ORIGEN
         int muelleOrigen = -1;
         while ((muelleOrigen < 1 || muelleOrigen > puertoOrigen.getMuelles()) && !cancelar) {
-            muelleOrigen = Utilidades.leerNumero(teclado,"Ingrese el muelle de Origen (1 - " + puertoOrigen.getMuelles() + "): ",1,4);
+            muelleOrigen = Utilidades.leerNumero(teclado,"Ingrese el muelle de Origen (1 - " + puertoOrigen.getMuelles() + "): ",1,puertoOrigen.getMuelles());
         }
 
         // PUERTO DESTINO
@@ -301,7 +302,7 @@ public class Porte {
             destino = Utilidades.leerCadena(teclado,"Ingrese código de puerto Destino: ");
             puertoDestino = puertosEspaciales.buscarPuertoEspacial(destino);
 
-            if (destino.toLowerCase() == "cancelar") {
+            if (destino.equalsIgnoreCase("cancelar")) {
                 cancelar = true;
             } else if (puertoDestino == null) {
                 System.out.println("\tCódigo de puerto no encontrado.");
@@ -311,17 +312,18 @@ public class Porte {
         // MUELLE DESTINO
         int muelleDestino = -1;
         while ((muelleDestino < 1 || muelleDestino > puertoDestino.getMuelles()) && !cancelar) {
-            muelleDestino = Utilidades.leerNumero(teclado,"Ingrese el Terminal Destino (1 - " + puertoDestino.getMuelles() + "): ",1,4);
+            muelleDestino = Utilidades.leerNumero(teclado,"Ingrese el Terminal Destino (1 - " + puertoDestino.getMuelles() + "): ",1,puertoDestino.getMuelles());
         }
 
         // NAVE
         String matricula;
         Nave nave = null;
+        naves.mostrarNaves();
         while ((nave == null || nave.getAlcance() < puertoOrigen.distancia(puertoDestino)) && !cancelar) {
-            matricula = Utilidades.leerCadena(teclado, "Ingrese matrícula de la nave");
+            matricula = Utilidades.leerCadena(teclado, "Ingrese matrícula de la nave: ");
             nave = naves.buscarNave(matricula);
 
-            if (matricula.toLowerCase().equals("cancelar")) {
+            if (matricula.equalsIgnoreCase(  "cancelar")) {
                 cancelar = true;
             } else if (nave == null) {
                 System.out.println("\tMatricula de nave no encontrada");
@@ -331,9 +333,9 @@ public class Porte {
         }
 
         // FECHA SALIDA Y LLEGADA
-        Fecha fechaSalida;
-        Fecha fechaLlegada;
-        do {
+        Fecha fechaSalida = null;
+        Fecha fechaLlegada = null;
+        do if (!cancelar) {
             fechaSalida = Utilidades.leerFechaHora(teclado, "Introduzca la fecha de salida:");
             fechaLlegada = Utilidades.leerFechaHora(teclado, "Introduzca la fecha de llegada:");
 
@@ -344,8 +346,8 @@ public class Porte {
 
         // PRECIO
         double precio = -1;
-        while (precio < 0) {
-            precio = Utilidades.leerNumeroSinLimites(teclado, "Ingrese precio de pasaje: ");
+        while (precio < 0 && !cancelar) {
+            precio = Utilidades.leerNumero(teclado, "Ingrese precio de pasaje: ", 1, Utilidades.maxPrecioEnvio);
         }
 
         // RETURN

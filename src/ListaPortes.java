@@ -24,7 +24,7 @@ public class ListaPortes {
     // TODO: Devuelve el número de portes que hay en la lista
     public int getOcupacion() {
         int pos = 0;
-        while(portes[pos] != null) {
+        while(portes[pos] != null && pos < portes.length) {
             pos++;
         }
         return pos;
