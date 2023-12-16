@@ -8,7 +8,7 @@ import java.util.Scanner;
  * @version     1.0
  */
 public class Utilidades {
-
+    public static final double maxPrecioEnvio = 10000000;
     /**
      * TODO: Solicita un número repetidamente hasta que se introduzca uno correcto (dentro de los límites)
      * @param teclado
@@ -20,21 +20,10 @@ public class Utilidades {
     public static int leerNumero(Scanner teclado, String mensaje, int minimo, int maximo) {
         int numero;
         do {
-            System.out.println(mensaje);
+            System.out.print(mensaje);
             numero = teclado.nextInt();
         } while (numero > maximo || numero < minimo);
         return numero;
-    }
-
-
-    /**
-     * @param teclado
-     * @param mensaje
-     * @return int numero
-     */
-    public static int leerNumeroSinLimites(Scanner teclado, String mensaje) {
-        System.out.println(mensaje);
-        return teclado.nextInt();
     }
 
     /**
@@ -48,7 +37,7 @@ public class Utilidades {
     public static long leerNumero(Scanner teclado, String mensaje, long minimo, long maximo) {
         long numero;
         do {
-            System.out.println(mensaje);
+            System.out.print(mensaje);
             numero = teclado.nextLong();
         } while (numero > maximo || numero < minimo);
         return numero;
@@ -65,7 +54,7 @@ public class Utilidades {
     public static double leerNumero(Scanner teclado, String mensaje, double minimo, double maximo) {
         double numero;
         do {
-            System.out.println(mensaje);
+            System.out.print(mensaje);
             numero = teclado.nextDouble();
         } while (numero > maximo || numero < minimo);
         return numero;
@@ -82,12 +71,8 @@ public class Utilidades {
     public static char leerLetra(Scanner teclado, String mensaje, char minimo, char maximo) {
         char letra;
         do {
-            System.out.println(mensaje);
+            System.out.print(mensaje);
             letra = teclado.next().charAt(0);
-
-            if (letra > maximo || letra < minimo) {
-                System.out.println("La letra debe estar entre " + minimo + " y " + maximo);
-            }
         } while (letra > maximo || letra < minimo);
         return letra;
     }
@@ -104,7 +89,7 @@ public class Utilidades {
         int anio;
 
         do {
-            System.out.println(mensaje);
+            System.out.print(mensaje);
             System.out.print("Ingrese día: ");
             dia = teclado.nextInt();
             System.out.print("Ingrese mes: ");
