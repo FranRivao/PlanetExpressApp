@@ -298,7 +298,7 @@ public class Porte {
         // PUERTO DESTINO
         String destino;
         PuertoEspacial puertoDestino = null;
-        while (puertoDestino == null && !cancelar) {
+        while ((puertoDestino == null || puertoDestino.getCodigo().equals(puertoOrigen.getCodigo())) && !cancelar) {
             destino = Utilidades.leerCadena(teclado,"Ingrese código de puerto Destino: ");
             puertoDestino = puertosEspaciales.buscarPuertoEspacial(destino);
 
@@ -306,13 +306,15 @@ public class Porte {
                 cancelar = true;
             } else if (puertoDestino == null) {
                 System.out.println("\tCódigo de puerto no encontrado.");
+            } else if (puertoDestino == puertoOrigen) {
+                System.out.println("\tPuerto Origen no puede coindicir con Puerto Destino");
             }
         }
 
         // MUELLE DESTINO
         int muelleDestino = -1;
         while ((muelleDestino < 1 || muelleDestino > puertoDestino.getMuelles()) && !cancelar) {
-            muelleDestino = Utilidades.leerNumero(teclado,"Ingrese el Terminal Destino (1 - " + puertoDestino.getMuelles() + "): ",1,puertoDestino.getMuelles());
+            muelleDestino = Utilidades.leerNumero(teclado,"Ingrese el Terminal Destino (1 - " + puertoDestino.getMuelles() + "): ",1, puertoDestino.getMuelles());
         }
 
         // NAVE
