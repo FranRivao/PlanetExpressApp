@@ -51,14 +51,14 @@ public class PuertoEspacial {
         return numMuelles;
     }
     public String getIniciales() {
-        int pos = 0;
-        String iniciales = "";
-        iniciales += nombre.charAt(pos);
-        while(pos < nombre.length()) {
-            if (nombre.charAt(pos) == ' ')
-                iniciales += nombre.charAt(pos+1);
-        }
-        return iniciales;
+
+            String iniciales = "";
+            String[] array = nombre.split(" ");
+            for(int i = 0; i < array.length; i++){
+                iniciales = iniciales + array[i].charAt(0);
+            }
+            return iniciales;
+
     }
     /**
      * TODO: Método para calcular la distancia entre el puerto espacial que recibe el mensaje y el puerto
