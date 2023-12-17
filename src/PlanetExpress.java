@@ -247,6 +247,8 @@ public class PlanetExpress {
                     }
                     break;
                 case 4:     // TODO: Listado de envíos de un cliente
+                    Cliente cliente=app.listaClientes.seleccionarCliente(teclado,"¿De que cliente quieres listar los envios?");
+                    cliente.listarEnvios();
 
                     break;
                 case 5:     // TODO: Lista de envíos de un porte
