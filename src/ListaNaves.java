@@ -72,7 +72,7 @@ public class ListaNaves {
         int posicion=0;
         Nave nave=null;
         while(naves[posicion]!=null && nave==null){
-            if(naves[posicion].getMatricula()==matricula){
+            if(naves[posicion].getMatricula().equals(matricula)){
                 nave=naves[posicion];
             }
             posicion++;
@@ -83,7 +83,7 @@ public class ListaNaves {
     public void mostrarNaves() {
         for(int i=0;i<naves.length;i++){
             if (naves[i] != null)
-                System.out.println(naves[i].toString());
+                System.out.printf("\t%s\n", naves[i].toString());
         }
     }
 
@@ -115,7 +115,7 @@ public class ListaNaves {
     public boolean escribirNavesCsv(String nombre) {
         PrintWriter pw = null;
         try {
-            pw=new PrintWriter(new FileWriter(nombre,true));
+            pw=new PrintWriter(new FileWriter(nombre,false));
             for(int i=0; i< naves.length;i++){
                 pw.println(naves[i].toString());
             }

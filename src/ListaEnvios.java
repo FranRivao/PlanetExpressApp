@@ -125,7 +125,8 @@ public class ListaEnvios {
      */
     public void listarEnvios() {
         for (int i = 0; i < envios.length; i++) {
-            System.out.println(envios[i].toString());
+            if (envios[i] != null)
+                System.out.println(envios[i].toString());
         }
     }
 
@@ -139,9 +140,14 @@ public class ListaEnvios {
      * @return
      */
     public Envio seleccionarEnvio(Scanner teclado, String mensaje) {
-        System.out.println(mensaje);
-        Envio envio = envios[teclado.nextInt()];
-        return envio;
+        String localizador;
+        do {
+            localizador = Utilidades.leerCadena(teclado, "Seleccione un envío: ");
+
+            if (buscarEnvio(localizador) == null)
+                System.out.println("Localizador incorrecto");
+        } while(buscarEnvio(localizador) == null);
+        return buscarEnvio(localizador);
     }
 
 
@@ -154,9 +160,11 @@ public class ListaEnvios {
     public boolean aniadirEnviosCsv(String fichero) {
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new FileWriter(fichero,true));
+            pw = new PrintWriter(new FileWriter(fichero,false));
             for (int i = 0; i < envios.length; i++) {
-                pw.println(envios[i].toString());
+                if (envios[i] != null){
+                    pw.println(envios[i].toString());
+                }
             }
             return true;
         } catch (IOException e) {

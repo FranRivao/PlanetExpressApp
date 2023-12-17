@@ -285,7 +285,6 @@ public class Porte {
                 cancelar = true;
             } else if (puertoOrigen == null) {
                 System.out.println("\tCódigo de puerto no encontrado.");
-                System.out.println("A");
             }
         }
 
@@ -320,7 +319,9 @@ public class Porte {
         // NAVE
         String matricula;
         Nave nave = null;
-        naves.mostrarNaves();
+        if (!cancelar){
+            naves.mostrarNaves();
+        }
         while ((nave == null || nave.getAlcance() < puertoOrigen.distancia(puertoDestino)) && !cancelar) {
             matricula = Utilidades.leerCadena(teclado, "Ingrese matrícula de la nave: ");
             nave = naves.buscarNave(matricula);
@@ -337,14 +338,16 @@ public class Porte {
         // FECHA SALIDA Y LLEGADA
         Fecha fechaSalida = null;
         Fecha fechaLlegada = null;
-        do if (!cancelar) {
-            fechaSalida = Utilidades.leerFechaHora(teclado, "Introduzca la fecha de salida:");
-            fechaLlegada = Utilidades.leerFechaHora(teclado, "Introduzca la fecha de llegada:");
+        if (!cancelar) {
+            do{
+                fechaSalida = Utilidades.leerFechaHora(teclado, "Introduzca la fecha de salida:");
+                fechaLlegada = Utilidades.leerFechaHora(teclado, "Introduzca la fecha de llegada:");
 
-            if (fechaSalida.anterior(fechaLlegada)){
-                System.out.println("\tLlegada debe ser posterior a salida");
-            }
-        } while (fechaSalida.anterior(fechaLlegada));
+                if (fechaLlegada.anterior(fechaSalida)){
+                    System.out.println("\tLlegada debe ser posterior a salida");
+                }
+            } while (fechaLlegada.anterior(fechaSalida));
+        }
 
         // PRECIO
         double precio = -1;

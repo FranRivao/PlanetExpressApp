@@ -126,31 +126,22 @@ public class PlanetExpress {
      */
     public void contratarEnvio(Scanner teclado, Random rand, Porte porte) {
         if (porte != null) {
+            porte.imprimirMatrizHuecos();
             char valorEntrada;
             do {
                  valorEntrada = Utilidades.leerLetra(teclado, "¿Comprar un billete para un nuevo pasajero (n), o para uno ya existente (e)?", 'a', 'z');
-                if (valorEntrada != 'n' || valorEntrada != 'e') {
+                if (valorEntrada != 'n' && valorEntrada != 'e') {
                     System.out.println("El valor de la entrada debe ser 'n' o 'e'");
                 }
-            } while (valorEntrada != 'n' || valorEntrada != 'e');
+            } while (valorEntrada != 'n' && valorEntrada != 'e');
 
-            Cliente cliente = null; String emailCliente = "";
-            if (valorEntrada == 'e') {
-                do {
-                    emailCliente = Utilidades.leerCadena(teclado, "Email del cliente: ");
-                    if (listaClientes.buscarClienteEmail(emailCliente) == null) {
-                        System.out.println("Email no encontrado");
-                    }
-                } while (listaClientes.buscarClienteEmail(emailCliente) == null);
-            } else {
-                 cliente = Cliente.altaCliente(teclado, listaClientes, maxEnviosPorCliente);
-            }
+            Cliente cliente = valorEntrada == 'e' ? listaClientes.seleccionarCliente(teclado, "Email del cliente: ") : Cliente.altaCliente(teclado, listaClientes, maxEnviosPorCliente);
 
             int fila = Utilidades.leerNumero(teclado, "Fila del hueco : ", 1, porte.getNave().getFilas());
             int columna = Utilidades.leerNumero(teclado, "Columna del hueco", 1, porte.getNave().getColumnas());
             double precio = Utilidades.leerNumero(teclado, "Precio del envío: ",1, Utilidades.maxPrecioEnvio);
             String localizador = Envio.generarLocalizador(rand, porte.getID());
-            String email = valorEntrada == 'e' ? emailCliente : cliente.getEmail();
+            String email = cliente.getEmail();
             porte.ocuparHueco(new Envio(localizador, porte, listaClientes.buscarClienteEmail(email),fila, columna, precio));
         }
     }
@@ -163,7 +154,13 @@ public class PlanetExpress {
      * @return opción seleccionada
      */
     public static int menu(Scanner teclado) {
-        return Utilidades.leerNumero(teclado, "Seleccione un numero: ", 0,5);
+        System.out.printf("1. Alta de Porte\n" +
+                "2. Alta de Cliente\n" +
+                "3. Buscar Porte\n" +
+                "4. Mostrar envíos de un cliente\n" +
+                "5. Generar lista de envíos\n" +
+                "0. Salir\n");
+        return Utilidades.leerNumero(teclado, "Seleccione opción: ", 0,5);
     }
 
     /**
@@ -231,25 +228,13 @@ public class PlanetExpress {
                 case 3:     // TODO: Buscar Porte
                     app.listaPortes = app.buscarPorte(teclado);
                     if (app.listaPortes != null) {
-                        app.listaPortes.listarPortes();
-
-                        String idPorte = "";
-                        boolean cancelar = false;
-                        while(app.listaPortes.buscarPorte(idPorte) == null && !cancelar) {
-                            idPorte = Utilidades.leerCadena(teclado, "Seleccione un porte: ");
-                            cancelar = idPorte.toLowerCase() == "cancelar";
-                            if (app.listaPortes.buscarPorte(idPorte) == null  && !cancelar) {
-                                System.out.println("\tPorte no encontrado");
-                            }
-                        }
-                        Porte porteBuscado =  app.listaPortes.buscarPorte(idPorte);
-                        app.contratarEnvio(teclado, new Random(),porteBuscado);
+                        String cancelar = "cancelar";
+                        app.contratarEnvio(teclado, new Random(),app.listaPortes.seleccionarPorte(teclado, "Seleccione un porte: ", cancelar));
                     }
                     break;
                 case 4:     // TODO: Listado de envíos de un cliente
-                    Cliente cliente=app.listaClientes.seleccionarCliente(teclado,"¿De que cliente quieres listar los envios?");
-                    cliente.listarEnvios();
-
+                    Cliente cliente = app.listaClientes.seleccionarCliente(teclado,"¿De que cliente quieres listar los envios?");
+                    Envio envio = cliente.getListaEnvios().seleccionarEnvio(teclado, "Seleccione un envío: ");
                     break;
                 case 5:     // TODO: Lista de envíos de un porte
 

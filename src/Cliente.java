@@ -86,8 +86,13 @@ public class Cliente {
             nombre = Utilidades.leerCadena(teclado, "Nombre: ");
             apellidos = Utilidades.leerCadena(teclado, "Apellidos: ");
             email = Utilidades.leerCadena(teclado, "Email: ");
-        } while(!correctoEmail(email) || !nombre.matches("[A-Za-z]+") || !apellidos.matches("[A-Za-z]+") || clientes.buscarClienteEmail(email) != null);
 
+            if (!correctoEmail(email)) {
+                System.out.println("El email no es valido");
+            } else if (clientes.buscarClienteEmail(email) != null) {
+                System.out.println("El email ya esta en uso");
+            }
+        } while(!correctoEmail(email) || !nombre.matches("[A-Za-z]+") || !apellidos.matches("[A-Za-z]+") || clientes.buscarClienteEmail(email) != null);
         return new Cliente(nombre, apellidos, email, maxEnvios);
     }
 

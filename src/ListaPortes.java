@@ -96,7 +96,9 @@ public class ListaPortes {
      */
     public void listarPortes() {
         for (int i = 0; i < portes.length; i++) {
-            System.out.println(portes[i].toString());
+            if (portes[i] != null) {
+                System.out.println(portes[i].toString());
+            }
         }
     }
 
@@ -116,10 +118,9 @@ public class ListaPortes {
         String id;
         do {
             id = Utilidades.leerCadena(teclado,mensaje);
-        } while (id != cancelar);
+        } while (!id.equalsIgnoreCase(cancelar));
 
-        Porte porte = buscarPorte(id);
-        return porte;
+        return buscarPorte(id);
     }
 
     /**
@@ -131,19 +132,21 @@ public class ListaPortes {
     public boolean escribirPortesCsv(String fichero) {
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new FileWriter(fichero, true));
+            pw = new PrintWriter(new FileWriter(fichero, false));
             for (int i = 0; i < portes.length; i++) {
-                pw.printf("%s;%s;%s;%d;%s;%s;%d;%s;%f\n",
-                        portes[i].getID(),
-                        portes[i].getNave().getMatricula(),
-                        portes[i].getOrigen().getCodigo(),
-                        portes[i].getMuelleOrigen(),
-                        portes[i].getSalida().toString(),
-                        portes[i].getDestino().getCodigo(),
-                        portes[i].getMuelleDestino(),
-                        portes[i].getLlegada().toString(),
-                        portes[i].getPrecio()
-                );
+                if (portes[i] != null){
+                    pw.printf("%s;%s;%s;%d;%s;%s;%d;%s;%f\n",
+                            portes[i].getID(),
+                            portes[i].getNave().getMatricula(),
+                            portes[i].getOrigen().getCodigo(),
+                            portes[i].getMuelleOrigen(),
+                            portes[i].getSalida().toString(),
+                            portes[i].getDestino().getCodigo(),
+                            portes[i].getMuelleDestino(),
+                            portes[i].getLlegada().toString(),
+                            portes[i].getPrecio()
+                    );
+                }
             }
             return true;
         } catch (IOException e) {

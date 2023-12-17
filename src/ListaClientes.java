@@ -22,7 +22,7 @@ public class ListaClientes {
     // TODO: Devuelve el número de clientes que hay en la lista de clientes
     public int getOcupacion() {
         int pos = 0;
-        while(clientes[pos] != null && pos < clientes.length) {
+        while(clientes[pos] != null) {
             pos++;
         }
         return pos;
@@ -49,9 +49,10 @@ public class ListaClientes {
         int pos = 0;
         Cliente cliente = null;
         while(clientes[pos] != null && cliente == null) {
-            if (clientes[pos].getEmail() == email) {
+            if (clientes[pos].getEmail().equals(email)) {
                 cliente = clientes[pos];
             }
+            pos++;
         }
         return cliente;
     }
@@ -92,9 +93,11 @@ public class ListaClientes {
     public boolean escribirClientesCsv(String fichero) {
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new FileWriter(fichero, true));
+            pw = new PrintWriter(new FileWriter(fichero, false));
             for (int i = 0; i < clientes.length; i++) {
-                pw.printf("%s;%s;%s\n", clientes[i].getNombre(), clientes[i].getApellidos(), clientes[i].getEmail());
+                if (clientes[i] != null ){
+                    pw.printf("%s;%s;%s\n", clientes[i].getNombre(), clientes[i].getApellidos(), clientes[i].getEmail());
+                }
             }
             return true;
         } catch (IOException e) {
