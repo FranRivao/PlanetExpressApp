@@ -24,7 +24,7 @@ public class ListaPortes {
     // TODO: Devuelve el número de portes que hay en la lista
     public int getOcupacion() {
         int pos = 0;
-        while(portes[pos] != null && pos < portes.length) {
+        while(portes[pos] != null) {
             pos++;
         }
         return pos;
@@ -64,9 +64,10 @@ public class ListaPortes {
         int pos = 0;
         Porte porte = null;
         while(portes[pos] != null && porte == null) {
-            if (portes[pos].getID() == id) {
+            if (portes[pos].getID().equals(id)) {
                 porte = portes[pos];
             }
+            pos++;
         }
         return porte;
     }
@@ -82,8 +83,8 @@ public class ListaPortes {
     public ListaPortes buscarPortes(String codigoOrigen, String codigoDestino, Fecha fecha) {
         int pos = 0;
         ListaPortes listaPortes = new ListaPortes(portes.length);
-        while (portes[pos] != null && pos < portes.length) {
-            if (portes[pos].getOrigen().getCodigo() == codigoOrigen && portes[pos].getDestino().getCodigo() == codigoDestino && portes[pos].getSalida() == fecha) {
+        while (portes[pos] != null) {
+            if (portes[pos].coincide(codigoOrigen, codigoDestino, fecha)) {
                 listaPortes.insertarPorte(portes[pos]);
             }
             pos++;
@@ -116,11 +117,16 @@ public class ListaPortes {
     public Porte seleccionarPorte(Scanner teclado, String mensaje, String cancelar) {
         listarPortes();
         String id;
+        Porte porte = null;
         do {
             id = Utilidades.leerCadena(teclado,mensaje);
-        } while (!id.equalsIgnoreCase(cancelar));
+            porte = buscarPorte(id);
+            if (porte == null) {
+                System.out.println("No existe un porte con id " + id);
+            }
+        } while (!id.equalsIgnoreCase(cancelar) && porte == null);
 
-        return buscarPorte(id);
+        return porte;
     }
 
     /**
@@ -135,7 +141,7 @@ public class ListaPortes {
             pw = new PrintWriter(new FileWriter(fichero, false));
             for (int i = 0; i < portes.length; i++) {
                 if (portes[i] != null){
-                    pw.printf("%s;%s;%s;%d;%s;%s;%d;%s;%f\n",
+                    pw.printf("%s;%s;%s;%s;%s;%s;%s;%s;%s\n",
                             portes[i].getID(),
                             portes[i].getNave().getMatricula(),
                             portes[i].getOrigen().getCodigo(),
@@ -224,8 +230,9 @@ public class ListaPortes {
                     } else puntoComas++;
                     pos++;
                 }
+
                 listaPortes.insertarPorte(new Porte(
-                    id, naves.buscarNave(matricula), puertosEspaciales.buscarPuertoEspacial(codOrigen), Integer.parseInt(muelleOrigen), Fecha.fromString(salida), puertosEspaciales.buscarPuertoEspacial(codDestino), Integer.parseInt(muelleDestino), Fecha.fromString(llegada), Double.parseDouble(precio)
+                        id, naves.buscarNave(matricula), puertosEspaciales.buscarPuertoEspacial(codOrigen), Integer.parseInt(muelleOrigen), Fecha.fromString(salida), puertosEspaciales.buscarPuertoEspacial(codDestino), Integer.parseInt(muelleDestino), Fecha.fromString(llegada), Double.parseDouble(precio)
                 ));
             }
         } catch (IOException e) {

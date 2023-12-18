@@ -49,13 +49,10 @@ public class ListaEnvios {
     public boolean insertarEnvio(Envio envio) {
         boolean res = false;
         if (!estaLlena()) {
-            int pos = 0;
-            while (envios[pos] != null) {
-                pos++;
-            }
+            int pos = getOcupacion();
             envios[pos] = envio;
             res = true;
-        } else res = false;
+        }
         return res;
     }
 
@@ -163,7 +160,7 @@ public class ListaEnvios {
             pw = new PrintWriter(new FileWriter(fichero,false));
             for (int i = 0; i < envios.length; i++) {
                 if (envios[i] != null){
-                    pw.println(envios[i].toString());
+                    pw.printf("%s;%s;%s;%s;%s;%s\n", envios[i].getLocalizador(), envios[i].getPorte().getID(), envios[i].getCliente().getEmail(), envios[i].getFila(), envios[i].getColumna(), envios[i].getPrecio());
                 }
             }
             return true;

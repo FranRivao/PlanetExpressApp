@@ -1,5 +1,5 @@
-Starship SN15 (BFR-15) 25 contenedores, hasta 6.66846E-4 UA
-Falcon 9 Block 5 (B1058) 50 contenedores, hasta 3.36765E-4 UA
-New Glenn NG-3 (NG-3) 12 contenedores, hasta 7.50134E-4 UA
-Orion OFT-2 (OFT-2) 16 contenedores, hasta 4.26738E-4 UA
-Soyuz MS-19 (MS-19) 6 contenedores, hasta 21.3369 UA
+Starship;SN15;BFR-15;5;5;6.66846E-4
+Falcon 9;Block 5;B1058;5;10;3.36765E-4
+New Glenn;NG-3;NG-3;3;4;7.50134
+Orion;OFT-2;OFT-2;4;4;4.26738E-4
+Soyuz;MS-19;MS-19;3;2;2.13369

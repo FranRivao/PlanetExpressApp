@@ -89,7 +89,7 @@ public class Utilidades {
         int anio;
 
         do {
-            System.out.print(mensaje);
+            System.out.println(mensaje);
             System.out.print("Ingrese día: ");
             dia = teclado.nextInt();
             System.out.print("Ingrese mes: ");

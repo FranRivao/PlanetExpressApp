@@ -48,6 +48,8 @@ public class Porte {
         this.muelleDestino = muelleDestino;
         this.llegada = llegada;
         this.precio = precio;
+        this.huecos = new boolean[nave.getFilas()][nave.getColumnas()];
+        this.listaEnvios = new ListaEnvios(nave.getFilas()*nave.getColumnas());
     }
     public String getID() {
         return id;
@@ -97,7 +99,7 @@ public class Porte {
     }
     // TODO: ¿Está ocupado el hueco consultado?
     public boolean huecoOcupado(int fila, int columna) {
-        return huecos[fila][columna];
+        return huecos[fila-1][columna-1];
     }
     public Envio buscarEnvio(String localizador) {
         return listaEnvios.buscarEnvio(localizador);
@@ -121,7 +123,7 @@ public class Porte {
      */
     public boolean ocuparHueco(Envio envio) {
         if (!huecoOcupado(envio.getFila(), envio.getColumna())) {
-            huecos[envio.getFila()][envio.getColumna()] = true;
+            huecos[envio.getFila()-1][envio.getColumna()-1] = true;
             listaEnvios.insertarEnvio(envio);
             return true;
         }
@@ -169,7 +171,7 @@ public class Porte {
      * @return
      */
     public boolean coincide(String codigoOrigen, String codigoDestino, Fecha fecha) {
-        return (codigoOrigen == origen.getCodigo() && codigoDestino == origen.getCodigo() && fecha == salida);
+        return (codigoOrigen.equals(origen.getCodigo()) && codigoDestino.equals(destino.getCodigo()) && fecha.coincide(salida));
     }
 
     /**
@@ -187,7 +189,7 @@ public class Porte {
         // Letras superiores
         System.out.print("  ");
         for (int o = 0; o < huecos[0].length; o++) {
-            System.out.printf("%3c ", (char)o+'A');
+            System.out.printf("%3c", (char)o+'A');
         }
         System.out.println();
 
@@ -281,7 +283,7 @@ public class Porte {
             origen = Utilidades.leerCadena(teclado,"Ingrese código de puerto Origen: ");
             puertoOrigen = puertosEspaciales.buscarPuertoEspacial(origen);
 
-            if (origen.equalsIgnoreCase("cancelar")) {
+            if (origen.equals("cancelar")) {
                 cancelar = true;
             } else if (puertoOrigen == null) {
                 System.out.println("\tCódigo de puerto no encontrado.");
@@ -301,7 +303,7 @@ public class Porte {
             destino = Utilidades.leerCadena(teclado,"Ingrese código de puerto Destino: ");
             puertoDestino = puertosEspaciales.buscarPuertoEspacial(destino);
 
-            if (destino.equalsIgnoreCase("cancelar")) {
+            if (destino.equals("cancelar")) {
                 cancelar = true;
             } else if (puertoDestino == null) {
                 System.out.println("\tCódigo de puerto no encontrado.");

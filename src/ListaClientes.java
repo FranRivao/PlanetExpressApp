@@ -76,7 +76,7 @@ public class ListaClientes {
         // BUSCAR CLIENTE
         int pos = 0;
         while (cliente == null && pos < clientes.length) {
-            if (clientes[pos].getEmail() == email) {
+            if (clientes[pos].getEmail().equals(email)) {
                 cliente = clientes[pos];
             }
             pos++;

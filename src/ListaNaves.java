@@ -117,7 +117,7 @@ public class ListaNaves {
         try {
             pw=new PrintWriter(new FileWriter(nombre,false));
             for(int i=0; i< naves.length;i++){
-                pw.println(naves[i].toString());
+                pw.printf("%s;%s;%s;%s;%s;%s\n", naves[i].getMarca(), naves[i].getModelo(), naves[i].getMatricula(), naves[i].getFilas(), naves[i].getColumnas(), naves[i].getAlcance());
             }
 
             return true;
