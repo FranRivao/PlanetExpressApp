@@ -104,17 +104,17 @@ public class Envio {
         PrintWriter pw;
         try {
             pw = new PrintWriter(new FileWriter(fichero,true));
-            pw.println("-----------------------------------------------------");
-            pw.println("--------- Factura del envío " + localizador + " ---------");
-            pw.println("-----------------------------------------------------");
-            pw.println("Porte: " + porte.getID());
-            pw.println("Origen: " + porte.getOrigen().toStringSimple());
-            pw.println("Destino: " + porte.getDestino().toStringSimple());
-            pw.println("Salida: " + porte.getSalida().toString());
-            pw.println("Llegada: " + porte.getLlegada().toString());
-            pw.println("Cliente: " + cliente.toString());
-            pw.println("Hueco: " + fila + columna);
-            pw.println("Precio: " + precio + " SSD");
+            pw.printf("-----------------------------------------------------\n");
+            pw.printf("--------- Factura del envío " + localizador + " ---------\n");
+            pw.printf("-----------------------------------------------------\n");
+            pw.printf("Porte: %s\n", porte.getID());
+            pw.printf("Origen: %s\n", porte.getOrigen().toStringSimple());
+            pw.printf("Destino: %s\n", porte.getDestino().toStringSimple());
+            pw.printf("Salida: %s\n", porte.getSalida().toString());
+            pw.printf("Llegada: %s\n", porte.getLlegada().toString());
+            pw.printf("Cliente: %s\n", cliente.toString());
+            pw.printf("Hueco: %s\n", fila + columna);
+            pw.printf("Precio: %s\n", precio + " SSD");
             return true;
         } catch (IOException e) {
             System.out.println(e.getMessage());
