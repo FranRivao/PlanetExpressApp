@@ -213,23 +213,26 @@ public class Porte {
      * @return
      */
     public boolean generarListaEnvios(String fichero) {
-        PrintWriter pw;
+        PrintWriter pw = null;
         Envio envio;
         Cliente cliente;
 
         try {
-            pw = new PrintWriter(new FileWriter(fichero, true));
+            pw = new PrintWriter(new FileWriter(fichero, false));
 
-            pw.println("--------------------------------------------------");
-            pw.println("-------- Lista de envíos del porte " + id + "--------");
-            pw.println("--------------------------------------------------");
-            pw.println("Hueco\t\tCliente");
-            for (int i = 0; i < huecos.length; i++) {
-                for (int k = 0; k < huecos[i].length; k++) {
+            pw.print("--------------------------------------------------\n");
+            pw.print("-------- Lista de envíos del porte " + id + "--------\n");
+            pw.print("--------------------------------------------------\n");
+            pw.print("Hueco\t\tCliente\n");
+            for (int i = 0; i < nave.getFilas(); i++) {
+                for (int k = 0; k < nave.getColumnas(); k++) {
                     if (huecos[i][k]) {
                         envio = listaEnvios.buscarEnvio(id, i, k);
-                        cliente = envio.getCliente();
-                        pw.printf("%2d%1c\t\t%s %s, %s\n",envio.getFila(),(char)envio.getColumna()+'A',cliente.getNombre(),cliente.getApellidos(),cliente.getEmail());
+                        if (envio != null) {
+                            cliente = envio.getCliente();
+                            System.out.println(cliente.getEmail());
+                            pw.printf("%2d%1c\t\t%s %s, %s\n",envio.getFila(),(char)envio.getColumna()+'A',cliente.getNombre(),cliente.getApellidos(),cliente.getEmail());
+                        }
                     } else {
                         pw.printf("%2d%1c\n",i+1,(char)k+'A');
                     }
@@ -239,6 +242,10 @@ public class Porte {
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
+        } finally {
+            if (pw != null){
+                pw.close();
+            }
         }
     }
 
