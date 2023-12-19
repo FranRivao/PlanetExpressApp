@@ -62,7 +62,7 @@ public class Envio {
 
     // TODO: Ejemplos: "1A" para el hueco con fila 1 y columna 1, "3D" para el hueco con fila 3 y columna 4
     public String getHueco() {
-        return String.valueOf(fila) + 'A' + (columna - 1);
+        return ((fila+1) + " A " + (char)(columna+1+'A'));
     }
 
     public double getPrecio() {
@@ -101,7 +101,7 @@ public class Envio {
      * Precio: 13424,56 SSD
      */
     public boolean generarFactura(String fichero) {
-        PrintWriter pw = null;
+        PrintWriter pw;
         try {
             pw = new PrintWriter(new FileWriter(fichero,true));
             pw.println("-----------------------------------------------------");
@@ -136,7 +136,7 @@ public class Envio {
         StringBuilder localizador = new StringBuilder(idPorte);
         for (int i = 0; i < 9; i++) {
             int numLetra = rand.nextInt(26);
-            localizador.append((char)numLetra+'A');
+            localizador.append((char)(numLetra+'A'));
         }
         return localizador.toString();
     }

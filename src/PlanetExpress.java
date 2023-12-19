@@ -150,8 +150,10 @@ public class PlanetExpress {
                 } while (porte.huecoOcupado(fila,columna));
                 double precio = Utilidades.leerNumero(teclado, "Precio del envío: ",1, Utilidades.maxPrecioEnvio);
                 String localizador = Envio.generarLocalizador(rand, porte.getID());
+                if (porte.ocuparHueco(new Envio(localizador, porte, cliente,fila, columna, precio))){
+                    System.out.println("Envio " + localizador + " creado correctamente");
+                } else System.out.println("Hubo un error al crear el envio");
 
-                porte.ocuparHueco(new Envio(localizador, porte, cliente,fila, columna, precio));
             }
         }
     }
@@ -244,12 +246,23 @@ public class PlanetExpress {
                 case 4:     // TODO: Listado de envíos de un cliente
                     Cliente cliente = app.listaClientes.seleccionarCliente(teclado,"¿De que cliente quieres listar los envios?");
                     Envio envio = cliente.getListaEnvios().seleccionarEnvio(teclado, "Seleccione un envío: ");
+                    if (envio != null) {
+                        char valorEntrada;
+                        do {
+                            valorEntrada = Utilidades.leerLetra(teclado, "¿Cancelar envío (c), o generar factura (f)?", 'a', 'z');
+                            if (valorEntrada != 'c' && valorEntrada != 'e') {
+                                System.out.println("El valor de la entrada debe ser 'c' o 'f'");
+                            }
+                        } while (valorEntrada != 'c' && valorEntrada != 'f');
+                        if (valorEntrada == 'f') {
+                            envio.generarFactura(Utilidades.leerCadena(teclado, "Nombre del fichero: "));
+                        } else cliente.cancelarEnvio(envio.getLocalizador());
+                    }
                     break;
                 case 5:     // TODO: Lista de envíos de un porte
                     Porte porte = app.listaPortes.seleccionarPorte(teclado, "Seleccione un porte: ", "cancelar");
                     if (porte != null) {
-                        String fichero = Utilidades.leerCadena(teclado, "Nombre del fichero: ");
-                        porte.generarListaEnvios(fichero);
+                        porte.generarListaEnvios(Utilidades.leerCadena(teclado, "Nombre del fichero: "));
                     }
                     break;
             }

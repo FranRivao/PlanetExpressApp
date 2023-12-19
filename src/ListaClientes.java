@@ -66,7 +66,6 @@ public class ListaClientes {
      * @return
      */
     public Cliente seleccionarCliente(Scanner teclado, String mensaje) {
-        Cliente cliente = null;
         String email;
         // PEDIR EMAIL
         do {
@@ -76,7 +75,7 @@ public class ListaClientes {
             }
         } while(!Cliente.correctoEmail(email) || buscarClienteEmail(email) == null);
 
-        return cliente;
+        return buscarClienteEmail(email);
     }
 
     /**
