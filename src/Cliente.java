@@ -81,19 +81,38 @@ public class Cliente {
      * @return Cliente
      */
     public static Cliente altaCliente(Scanner teclado, ListaClientes clientes, int maxEnvios) {
-        String nombre, apellidos, email;
+        String nombre, apellidos = "", email = "";
+        boolean cancelar;
+        // NOMBRE
         do {
             nombre = Utilidades.leerCadena(teclado, "Nombre: ");
+            cancelar = nombre.equalsIgnoreCase("cancelar");
+        } while (!nombre.matches("[A-Za-z]+") && !cancelar);
+
+        // APELLIDOS
+        while (!apellidos.matches("[A-Za-z]+") && !cancelar) {
             apellidos = Utilidades.leerCadena(teclado, "Apellidos: ");
+            cancelar = apellidos.equalsIgnoreCase("cancelar");
+        }
+
+        // EMAIL
+        while ((clientes.buscarClienteEmail(email) != null || !correctoEmail(email)) && !cancelar) {
             email = Utilidades.leerCadena(teclado, "Email: ");
 
-            if (!correctoEmail(email)) {
+            if (apellidos.equalsIgnoreCase("cancelar")) {
+                cancelar = true;
+            } else if (!correctoEmail(email)) {
                 System.out.println("El email no es valido");
             } else if (clientes.buscarClienteEmail(email) != null) {
                 System.out.println("El email ya esta en uso");
             }
-        } while(!correctoEmail(email) || !nombre.matches("[A-Za-z]+") || !apellidos.matches("[A-Za-z]+") || clientes.buscarClienteEmail(email) != null);
-        return new Cliente(nombre, apellidos, email, maxEnvios);
+        }
+
+        // RETURN
+        if (!cancelar) {
+            return new Cliente(nombre, apellidos, email, maxEnvios);
+        }
+        return null;
     }
 
 

@@ -51,7 +51,10 @@ public class PlanetExpress {
         listaNaves = ListaNaves.leerNavesCsv(ficheroNaves, maxNaves);
         listaClientes = ListaClientes.leerClientesCsv(ficheroClientes, maxClientes, maxEnviosPorCliente);
         listaPortes = ListaPortes.leerPortesCsv(ficheroPortes, maxPortes, listaPuertosEspaciales, listaNaves);
-        ListaEnvios.leerEnviosCsv(ficheroEnvios, listaPortes, listaClientes);
+        for (int i = 0; i < listaClientes.getOcupacion(); i++) {
+            System.out.println("A");
+            listaClientes.getCliente(i).getListaEnvios().aniadirEnviosCsv(ficheroEnvios);
+        }
     }
 
 
@@ -66,6 +69,10 @@ public class PlanetExpress {
      */
     public void guardarDatos(String ficheroPuertos, String ficheroNaves, String ficheroPortes, String ficheroClientes, String ficheroEnvios) {
         listaClientes.escribirClientesCsv(ficheroClientes);
+        for (int i = 0; i < listaClientes.getOcupacion(); i++) {
+            System.out.println("B");
+            listaClientes.getCliente(i).getListaEnvios().aniadirEnviosCsv(ficheroEnvios);
+        }
         listaPortes.escribirPortesCsv(ficheroPortes);
         listaPuertosEspaciales.escribirPuertosEspacialesCsv(ficheroPuertos);
         listaNaves.escribirNavesCsv(ficheroNaves);

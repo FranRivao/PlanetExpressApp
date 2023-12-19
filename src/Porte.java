@@ -124,7 +124,7 @@ public class Porte {
     public boolean ocuparHueco(Envio envio) {
         if (!huecoOcupado(envio.getFila(), envio.getColumna())) {
             huecos[envio.getFila()-1][envio.getColumna()-1] = true;
-            listaEnvios.insertarEnvio(envio);
+            envio.getCliente().aniadirEnvio(envio);
             return true;
         }
         return false;
@@ -360,6 +360,7 @@ public class Porte {
         // RETURN
         if (!cancelar) {
             return new Porte(id, nave, puertoOrigen, muelleOrigen, fechaSalida, puertoDestino, muelleDestino, fechaLlegada, precio);
-        } else return null;
+        }
+        return null;
     }
 }

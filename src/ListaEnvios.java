@@ -23,7 +23,7 @@ public class ListaEnvios {
     // TODO: Devuelve el número de envíos que hay en la lista
     public int getOcupacion() {
         int pos = 0;
-        while (envios[pos] != null && pos < envios.length) {
+        while (envios[pos] != null) {
             pos++;
         }
         return pos;
