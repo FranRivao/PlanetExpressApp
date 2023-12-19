@@ -99,6 +99,7 @@ public class Cliente {
         while ((clientes.buscarClienteEmail(email) != null || !correctoEmail(email)) && !cancelar) {
             email = Utilidades.leerCadena(teclado, "Email: ");
 
+
             if (apellidos.equalsIgnoreCase("cancelar")) {
                 cancelar = true;
             } else if (!correctoEmail(email)) {

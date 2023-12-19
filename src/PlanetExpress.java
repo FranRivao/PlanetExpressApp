@@ -52,7 +52,6 @@ public class PlanetExpress {
         listaClientes = ListaClientes.leerClientesCsv(ficheroClientes, maxClientes, maxEnviosPorCliente);
         listaPortes = ListaPortes.leerPortesCsv(ficheroPortes, maxPortes, listaPuertosEspaciales, listaNaves);
         for (int i = 0; i < listaClientes.getOcupacion(); i++) {
-            System.out.println("A");
             listaClientes.getCliente(i).getListaEnvios().aniadirEnviosCsv(ficheroEnvios);
         }
     }
@@ -70,7 +69,7 @@ public class PlanetExpress {
     public void guardarDatos(String ficheroPuertos, String ficheroNaves, String ficheroPortes, String ficheroClientes, String ficheroEnvios) {
         listaClientes.escribirClientesCsv(ficheroClientes);
         for (int i = 0; i < listaClientes.getOcupacion(); i++) {
-            System.out.println("B");
+            listaClientes.getCliente(i).getListaEnvios().listarEnvios();
             listaClientes.getCliente(i).getListaEnvios().aniadirEnviosCsv(ficheroEnvios);
         }
         listaPortes.escribirPortesCsv(ficheroPortes);
@@ -132,7 +131,7 @@ public class PlanetExpress {
      * @param porte
      */
     public void contratarEnvio(Scanner teclado, Random rand, Porte porte) {
-        if (porte != null) {
+        if (porte != null && !porte.porteLleno()) {
             porte.imprimirMatrizHuecos();
             char valorEntrada;
             do {
@@ -143,16 +142,17 @@ public class PlanetExpress {
             } while (valorEntrada != 'n' && valorEntrada != 'e');
 
             Cliente cliente = valorEntrada == 'e' ? listaClientes.seleccionarCliente(teclado, "Email del cliente: ") : Cliente.altaCliente(teclado, listaClientes, maxEnviosPorCliente);
-            int fila, columna;
-            do {
-                fila = Utilidades.leerNumero(teclado, "Fila del hueco : ", 1, porte.getNave().getFilas());
-                columna = Utilidades.leerNumero(teclado, "Columna del hueco: ", 1, porte.getNave().getColumnas());
-            } while (porte.huecoOcupado(fila,columna));
-            double precio = Utilidades.leerNumero(teclado, "Precio del envío: ",1, Utilidades.maxPrecioEnvio);
-            String localizador = Envio.generarLocalizador(rand, porte.getID());
-            String email = cliente.getEmail();
+            if (cliente != null) {
+                int fila, columna;
+                do {
+                    fila = Utilidades.leerNumero(teclado, "Fila del hueco : ", 1, porte.getNave().getFilas());
+                    columna = Utilidades.leerNumero(teclado, "Columna del hueco: ", 1, porte.getNave().getColumnas());
+                } while (porte.huecoOcupado(fila,columna));
+                double precio = Utilidades.leerNumero(teclado, "Precio del envío: ",1, Utilidades.maxPrecioEnvio);
+                String localizador = Envio.generarLocalizador(rand, porte.getID());
 
-            porte.ocuparHueco(new Envio(localizador, porte, listaClientes.buscarClienteEmail(email),fila, columna, precio));
+                porte.ocuparHueco(new Envio(localizador, porte, cliente,fila, columna, precio));
+            }
         }
     }
 
@@ -238,8 +238,7 @@ public class PlanetExpress {
                 case 3:     // TODO: Buscar Porte
                     ListaPortes lista = app.buscarPorte(teclado);
                     if (lista.getOcupacion() > 0) {
-                        String cancelar = "cancelar";
-                        app.contratarEnvio(teclado, new Random(),lista.seleccionarPorte(teclado, "Seleccione un porte: ", cancelar));
+                        app.contratarEnvio(teclado, new Random(),lista.seleccionarPorte(teclado, "Seleccione un porte: ", "cancelar"));
                     } else System.out.println("No existe ese porte");
                     break;
                 case 4:     // TODO: Listado de envíos de un cliente

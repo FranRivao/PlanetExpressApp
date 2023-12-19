@@ -121,7 +121,7 @@ public class ListaPortes {
         do {
             id = Utilidades.leerCadena(teclado,mensaje);
             porte = buscarPorte(id);
-            if (porte == null) {
+            if (porte == null && !id.equalsIgnoreCase(cancelar)) {
                 System.out.println("No existe un porte con id " + id);
             }
         } while (!id.equalsIgnoreCase(cancelar) && porte == null);
@@ -136,32 +136,24 @@ public class ListaPortes {
      * @return
      */
     public boolean escribirPortesCsv(String fichero) {
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(new FileWriter(fichero, false));
-            for (int i = 0; i < portes.length; i++) {
-                if (portes[i] != null){
-                    pw.printf("%s;%s;%s;%s;%s;%s;%s;%s;%s\n",
-                            portes[i].getID(),
-                            portes[i].getNave().getMatricula(),
-                            portes[i].getOrigen().getCodigo(),
-                            portes[i].getMuelleOrigen(),
-                            portes[i].getSalida().toString(),
-                            portes[i].getDestino().getCodigo(),
-                            portes[i].getMuelleDestino(),
-                            portes[i].getLlegada().toString(),
-                            portes[i].getPrecio()
-                    );
-                }
+        try (PrintWriter pw = new PrintWriter(new FileWriter(fichero, false))) {
+            for (int i = 0; i < getOcupacion(); i++) {
+                pw.printf("%s;%s;%s;%s;%s;%s;%s;%s;%s\n",
+                        portes[i].getID(),
+                        portes[i].getNave().getMatricula(),
+                        portes[i].getOrigen().getCodigo(),
+                        portes[i].getMuelleOrigen(),
+                        portes[i].getSalida().toString(),
+                        portes[i].getDestino().getCodigo(),
+                        portes[i].getMuelleDestino(),
+                        portes[i].getLlegada().toString(),
+                        portes[i].getPrecio()
+                );
             }
             return true;
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
-        } finally {
-            if (pw != null){
-                pw.close();
-            }
         }
     }
 
@@ -176,10 +168,8 @@ public class ListaPortes {
      */
     public static ListaPortes leerPortesCsv(String fichero, int capacidad, ListaPuertosEspaciales puertosEspaciales, ListaNaves naves) {
         ListaPortes listaPortes = new ListaPortes(capacidad);
-        Scanner sc = null;
         String id, matricula, codOrigen, muelleOrigen, salida, codDestino, muelleDestino, llegada, precio;
-        try {
-            sc = new Scanner(new FileReader(fichero));
+        try (Scanner sc = new Scanner(new FileReader(fichero))) {
             int pos, puntoComas;
 
             while (sc.hasNext()) {
@@ -239,6 +229,7 @@ public class ListaPortes {
             System.out.println(e.getMessage());
             return null;
         }
+
         return listaPortes;
     }
 }

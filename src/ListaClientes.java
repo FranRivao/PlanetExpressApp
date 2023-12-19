@@ -71,16 +71,11 @@ public class ListaClientes {
         // PEDIR EMAIL
         do {
             email = Utilidades.leerCadena(teclado, "Email del cliente: ");
-        } while(!Cliente.correctoEmail(email));
-
-        // BUSCAR CLIENTE
-        int pos = 0;
-        while (cliente == null && pos < clientes.length) {
-            if (clientes[pos].getEmail().equals(email)) {
-                cliente = clientes[pos];
+            if (buscarClienteEmail(email) == null) {
+                System.out.println("No existe un cliente con dicho email");
             }
-            pos++;
-        }
+        } while(!Cliente.correctoEmail(email) || buscarClienteEmail(email) == null);
+
         return cliente;
     }
 
@@ -91,22 +86,18 @@ public class ListaClientes {
      * @return
      */
     public boolean escribirClientesCsv(String fichero) {
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(new FileWriter(fichero, false));
-            for (int i = 0; i < clientes.length; i++) {
-                if (clientes[i] != null ){
-                    pw.printf("%s;%s;%s\n", clientes[i].getNombre(), clientes[i].getApellidos(), clientes[i].getEmail());
-                }
+        try (PrintWriter pw = new PrintWriter(new FileWriter(fichero, false))) {
+            for (int i = 0; i < getOcupacion(); i++) {
+                pw.printf("%s;%s;%s\n",
+                        clientes[i].getNombre(),
+                        clientes[i].getApellidos(),
+                        clientes[i].getEmail()
+                );
             }
             return true;
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
-        } finally {
-            if (pw != null){
-                pw.close();
-            }
         }
     }
 

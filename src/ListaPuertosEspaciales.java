@@ -89,21 +89,14 @@ public class ListaPuertosEspaciales {
      * @return
      */
     public boolean escribirPuertosEspacialesCsv(String nombre) {
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(new FileWriter(nombre,false));
-            for (int i = 0; i < lista.length; i++) {
-                if (lista[i] != null)
-                    pw.printf("%s;%s;%s;%s;%s;%s\n", lista[i].getNombre(), lista[i].getCodigo(), lista[i].getRadio(), lista[i].getAzimut(), lista[i].getPolar(), lista[i].getMuelles());
+        try (PrintWriter pw = new PrintWriter(new FileWriter(nombre, false))) {
+            for (int i = 0; i < getOcupacion(); i++) {
+                pw.printf("%s;%s;%s;%s;%s;%s\n", lista[i].getNombre(), lista[i].getCodigo(), lista[i].getRadio(), lista[i].getAzimut(), lista[i].getPolar(), lista[i].getMuelles());
             }
             return true;
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
-        } finally {
-            if (pw != null){
-                pw.close();
-            }
         }
     }
 

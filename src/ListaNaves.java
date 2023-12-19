@@ -113,22 +113,21 @@ public class ListaNaves {
      * @return
      */
     public boolean escribirNavesCsv(String nombre) {
-        PrintWriter pw = null;
-        try {
-            pw=new PrintWriter(new FileWriter(nombre,false));
-            for(int i=0; i< naves.length;i++){
-                pw.printf("%s;%s;%s;%s;%s;%s\n", naves[i].getMarca(), naves[i].getModelo(), naves[i].getMatricula(), naves[i].getFilas(), naves[i].getColumnas(), naves[i].getAlcance());
+        try (PrintWriter pw = new PrintWriter(new FileWriter(nombre, false))) {
+            for (int i = 0; i < getOcupacion(); i++) {
+                pw.printf("%s;%s;%s;%s;%s;%s\n",
+                        naves[i].getMarca(),
+                        naves[i].getModelo(),
+                        naves[i].getMatricula(),
+                        naves[i].getFilas(),
+                        naves[i].getColumnas(),
+                        naves[i].getAlcance()
+                );
             }
-
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
-        } finally {
-            if(pw!=null){
-                pw.close();
-            }
-
         }
     }
 
@@ -142,15 +141,14 @@ public class ListaNaves {
     public static ListaNaves leerNavesCsv(String fichero, int capacidad) {
         ListaNaves listaNaves = new ListaNaves(capacidad);
         String marca, modelo, matricula, filas, columnas, alcance;
-        Scanner sc = null;
 
-        try {
-            sc = new Scanner(new FileReader(fichero));
+        try (Scanner sc = new Scanner(new FileReader(fichero))) {
             int pos, puntoComas = 0;
 
             while (sc.hasNext()) {
                 String cadena = sc.nextLine();
-                marca = modelo = matricula = filas = columnas = alcance = ""; pos = puntoComas = 0;
+                marca = modelo = matricula = filas = columnas = alcance = "";
+                pos = puntoComas = 0;
 
                 while (pos < cadena.length()) {
                     if (cadena.charAt(pos) != ';') {
@@ -178,14 +176,10 @@ public class ListaNaves {
                     pos++;
                 }
 
-                listaNaves.insertarNave(new Nave(marca, modelo, matricula, Integer.parseInt(filas), Integer.parseInt(columnas), Double.parseDouble(alcance)));
+                listaNaves.insertarNave(new Nave(marca, modelo, matricula, Integer.parseInt(columnas), Integer.parseInt(filas), Double.parseDouble(alcance)));
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        } finally {
-            if (sc != null) {
-                sc.close();
-            }
         }
 
         return listaNaves;

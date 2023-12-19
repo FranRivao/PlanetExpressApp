@@ -1,5 +1,8 @@
 import java.io.*;
 import java.util.Scanner;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 
 /**
  * Description of the class
@@ -158,10 +161,21 @@ public class ListaEnvios {
         PrintWriter pw = null;
         try {
             pw = new PrintWriter(new FileWriter(fichero,false));
-            for (int i = 0; i < envios.length; i++) {
-                if (envios[i] != null){
-                    pw.printf("%s;%s;%s;%s;%s;%s\n", envios[i].getLocalizador(), envios[i].getPorte().getID(), envios[i].getCliente().getEmail(), envios[i].getFila(), envios[i].getColumna(), envios[i].getPrecio());
-                }
+            for (int i = 0; i < getOcupacion(); i++) {
+                System.out.println(envios[i].getLocalizador());
+                System.out.println(envios[i].getPorte().getID());
+                System.out.println(envios[i].getCliente().getEmail());
+                System.out.println(envios[i].getColumna());
+                System.out.println(envios[i].getFila());
+                System.out.println(envios[i].getPrecio());
+                pw.printf("%s;%s;%s;%s;%s;%s\n",
+                    envios[i].getLocalizador(),
+                    envios[i].getPorte().getID(),
+                    envios[i].getCliente().getEmail(),
+                    envios[i].getFila(),
+                    envios[i].getColumna(),
+                    envios[i].getPrecio()
+                );
             }
             return true;
         } catch (IOException e) {
@@ -184,11 +198,9 @@ public class ListaEnvios {
      */
 
     public static void leerEnviosCsv(String ficheroEnvios, ListaPortes portes, ListaClientes clientes) {
-        Scanner sc = null;
-        String localizador, idPorte, email, filas, columnas, precio;
 
-        try {
-            sc = new Scanner(new FileReader(ficheroEnvios));
+        String localizador, idPorte, email, filas, columnas, precio;
+        try (Scanner sc = new Scanner(new FileReader(ficheroEnvios))) {
             int pos, puntoComas, lineas = 0;
 
             while (sc.hasNext()) {
@@ -198,7 +210,8 @@ public class ListaEnvios {
 
             while (sc.hasNext()) {
                 String cadena = sc.nextLine();
-                localizador = idPorte = email = filas = columnas = precio = ""; pos = puntoComas = 0;
+                localizador = idPorte = email = filas = columnas = precio = "";
+                pos = puntoComas = 0;
 
                 while (pos < cadena.length()) {
                     if (cadena.charAt(pos) != ';') {
@@ -230,10 +243,6 @@ public class ListaEnvios {
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        } finally {
-            if (sc != null) {
-                sc.close();
-            }
         }
     }
 }
