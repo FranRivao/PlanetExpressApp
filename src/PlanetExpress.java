@@ -240,8 +240,11 @@ public class PlanetExpress {
                     Envio envio = cliente.getListaEnvios().seleccionarEnvio(teclado, "Seleccione un envío: ");
                     break;
                 case 5:     // TODO: Lista de envíos de un porte
-
-
+                    Porte porte = app.listaPortes.seleccionarPorte(teclado, "Seleccione un porte: ", "cancelar");
+                    if (porte != null) {
+                        String fichero = Utilidades.leerCadena(teclado, "Nombre del fichero: ");
+                        porte.generarListaEnvios(fichero);
+                    }
                     break;
             }
         } while (opcion != 0);
