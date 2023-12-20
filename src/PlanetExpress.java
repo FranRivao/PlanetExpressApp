@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -51,9 +54,7 @@ public class PlanetExpress {
         listaNaves = ListaNaves.leerNavesCsv(ficheroNaves, maxNaves);
         listaClientes = ListaClientes.leerClientesCsv(ficheroClientes, maxClientes, maxEnviosPorCliente);
         listaPortes = ListaPortes.leerPortesCsv(ficheroPortes, maxPortes, listaPuertosEspaciales, listaNaves);
-        for (int i = 0; i < listaClientes.getOcupacion(); i++) {
-            listaClientes.getCliente(i).getListaEnvios().aniadirEnviosCsv(ficheroEnvios);
-        }
+        ListaEnvios.leerEnviosCsv(ficheroEnvios, listaPortes, listaClientes);
     }
 
 
@@ -68,8 +69,13 @@ public class PlanetExpress {
      */
     public void guardarDatos(String ficheroPuertos, String ficheroNaves, String ficheroPortes, String ficheroClientes, String ficheroEnvios) {
         listaClientes.escribirClientesCsv(ficheroClientes);
+        try {
+            PrintWriter pw = new PrintWriter(new FileWriter(ficheroEnvios, false));
+            pw.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
         for (int i = 0; i < listaClientes.getOcupacion(); i++) {
-            listaClientes.getCliente(i).getListaEnvios().listarEnvios();
             listaClientes.getCliente(i).getListaEnvios().aniadirEnviosCsv(ficheroEnvios);
         }
         listaPortes.escribirPortesCsv(ficheroPortes);
