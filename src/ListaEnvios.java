@@ -30,7 +30,6 @@ public class ListaEnvios {
             pos++;
         }
         return pos;
-
     }
 
     // TODO: ¿Está llena la lista de envíos?
@@ -160,31 +159,22 @@ public class ListaEnvios {
     public boolean aniadirEnviosCsv(String fichero) {
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new FileWriter(fichero,false));
             for (int i = 0; i < getOcupacion(); i++) {
-                System.out.println(envios[i].getLocalizador());
-                System.out.println(envios[i].getPorte().getID());
-                System.out.println(envios[i].getCliente().getEmail());
-                System.out.println(envios[i].getColumna());
-                System.out.println(envios[i].getFila());
-                System.out.println(envios[i].getPrecio());
+                pw = new PrintWriter(new FileWriter(fichero,true));
                 pw.printf("%s;%s;%s;%s;%s;%s\n",
-                    envios[i].getLocalizador(),
-                    envios[i].getPorte().getID(),
-                    envios[i].getCliente().getEmail(),
-                    envios[i].getFila(),
-                    envios[i].getColumna(),
-                    envios[i].getPrecio()
+                     envios[i].getLocalizador(),
+                     envios[i].getPorte().getID(),
+                     envios[i].getCliente().getEmail(),
+                     envios[i].getFila(),
+                     envios[i].getColumna(),
+                     envios[i].getPrecio()
                 );
+                pw.close();
             }
             return true;
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
-        } finally {
-            if (pw != null){
-                pw.close();
-            }
         }
     }
 
@@ -200,14 +190,18 @@ public class ListaEnvios {
     public static void leerEnviosCsv(String ficheroEnvios, ListaPortes portes, ListaClientes clientes) {
 
         String localizador, idPorte, email, filas, columnas, precio;
-        try (Scanner sc = new Scanner(new FileReader(ficheroEnvios))) {
-            int pos, puntoComas, lineas = 0;
-
-            while (sc.hasNext()) {
-                lineas++;
+        try {
+            Scanner sc1 = new Scanner(new FileReader(ficheroEnvios));
+            int lineas = 0;
+            while (sc1.hasNext()) {
+                sc1.next();
+                lineas ++;
             }
-            ListaEnvios listaEnvios = new ListaEnvios(lineas);
 
+            Scanner sc = new Scanner(new FileReader(ficheroEnvios));
+
+            int pos, puntoComas;
+            ListaEnvios listaEnvios = new ListaEnvios(lineas);
             while (sc.hasNext()) {
                 String cadena = sc.nextLine();
                 localizador = idPorte = email = filas = columnas = precio = "";
@@ -238,8 +232,10 @@ public class ListaEnvios {
                     } else puntoComas++;
                     pos++;
                 }
-
-                listaEnvios.insertarEnvio(new Envio(localizador, portes.buscarPorte(idPorte), clientes.buscarClienteEmail(email), Integer.getInteger(filas), Integer.getInteger(columnas), Integer.getInteger(precio)));
+                Porte porte = portes.buscarPorte(idPorte);
+                Envio envio = new Envio(localizador, porte, clientes.buscarClienteEmail(email), Integer.parseInt(filas), Integer.parseInt(columnas), Double.parseDouble(precio));
+                porte.ocuparHueco(envio);
+                listaEnvios.insertarEnvio(envio);
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
