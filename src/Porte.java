@@ -125,6 +125,7 @@ public class Porte {
         if (!huecoOcupado(envio.getFila(), envio.getColumna())) {
             huecos[envio.getFila()-1][envio.getColumna()-1] = true;
             envio.getCliente().aniadirEnvio(envio);
+            listaEnvios.insertarEnvio(envio);
             return true;
         }
         return false;
@@ -218,7 +219,7 @@ public class Porte {
         Cliente cliente;
 
         try {
-            pw = new PrintWriter(new FileWriter(fichero, false));
+            pw = new PrintWriter(new FileWriter("ficheros/"+fichero, false));
 
             pw.print("--------------------------------------------------\n");
             pw.print("-------- Lista de envíos del porte " + id + "--------\n");
@@ -227,25 +228,24 @@ public class Porte {
             for (int i = 0; i < nave.getFilas(); i++) {
                 for (int k = 0; k < nave.getColumnas(); k++) {
                     if (huecos[i][k]) {
-                        envio = listaEnvios.buscarEnvio(id, i, k);
+                        envio = buscarEnvio(i, k);
                         if (envio != null) {
+                            System.out.println(envio.getFila());
                             cliente = envio.getCliente();
+                            System.out.println("Aaaa");
                             System.out.println(cliente.getEmail());
-                            pw.printf("%2d%1c\t\t%s %s, %s\n",envio.getFila(),(char)envio.getColumna()+'A',cliente.getNombre(),cliente.getApellidos(),cliente.getEmail());
+                            pw.printf("%2d%1c\t\t%s %s, %s\n",envio.getFila(),(char)(envio.getColumna()-1)+'A',cliente.getNombre(),cliente.getApellidos(),cliente.getEmail());
                         }
                     } else {
                         pw.printf("%2d%1c\n",i+1,(char)k+'A');
                     }
                 }
             }
+            pw.close();
             return true;
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
-        } finally {
-            if (pw != null){
-                pw.close();
-            }
         }
     }
 

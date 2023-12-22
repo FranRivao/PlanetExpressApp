@@ -10,13 +10,6 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\ficheros\envio.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value=";" />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\ficheros\envios.csv">
           <value>
             <Attribute>

@@ -66,16 +66,18 @@ public class ListaClientes {
      * @return
      */
     public Cliente seleccionarCliente(Scanner teclado, String mensaje) {
-        String email;
+        String email, cancelar = "cancelar";
         // PEDIR EMAIL
         do {
             email = Utilidades.leerCadena(teclado, "Email del cliente: ");
-            if (buscarClienteEmail(email) == null) {
+            if (buscarClienteEmail(email) == null && !email.equalsIgnoreCase(cancelar)) {
                 System.out.println("No existe un cliente con dicho email");
             }
-        } while(!Cliente.correctoEmail(email) || buscarClienteEmail(email) == null);
+        } while((!Cliente.correctoEmail(email) || buscarClienteEmail(email) == null) && !email.equalsIgnoreCase(cancelar));
 
-        return buscarClienteEmail(email);
+        if (!email.equalsIgnoreCase(cancelar)){
+            return buscarClienteEmail(email);
+        } return null;
     }
 
     /**

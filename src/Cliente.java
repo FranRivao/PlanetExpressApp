@@ -111,7 +111,9 @@ public class Cliente {
 
         // RETURN
         if (!cancelar) {
-            return new Cliente(nombre, apellidos, email, maxEnvios);
+            Cliente cliente = new Cliente(nombre, apellidos, email, maxEnvios);
+            clientes.insertarCliente(cliente);
+            return cliente;
         }
         return null;
     }

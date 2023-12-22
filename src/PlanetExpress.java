@@ -1,6 +1,7 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -149,17 +150,7 @@ public class PlanetExpress {
 
             Cliente cliente = valorEntrada == 'e' ? listaClientes.seleccionarCliente(teclado, "Email del cliente: ") : Cliente.altaCliente(teclado, listaClientes, maxEnviosPorCliente);
             if (cliente != null) {
-                int fila, columna;
-                do {
-                    fila = Utilidades.leerNumero(teclado, "Fila del hueco : ", 1, porte.getNave().getFilas());
-                    columna = Utilidades.leerNumero(teclado, "Columna del hueco: ", 1, porte.getNave().getColumnas());
-                } while (porte.huecoOcupado(fila,columna));
-                double precio = Utilidades.leerNumero(teclado, "Precio del envío: ",1, Utilidades.maxPrecioEnvio);
-                String localizador = Envio.generarLocalizador(rand, porte.getID());
-                if (porte.ocuparHueco(new Envio(localizador, porte, cliente,fila, columna, precio))){
-                    System.out.println("Envio " + localizador + " creado correctamente");
-                } else System.out.println("Hubo un error al crear el envio");
-
+                Envio.altaEnvio(teclado, rand, porte, cliente);
             }
         }
     }
@@ -172,7 +163,7 @@ public class PlanetExpress {
      * @return opción seleccionada
      */
     public static int menu(Scanner teclado) {
-        System.out.printf("1. Alta de Porte\n" +
+        System.out.print("1. Alta de Porte\n" +
                 "2. Alta de Cliente\n" +
                 "3. Buscar Porte\n" +
                 "4. Mostrar envíos de un cliente\n" +
@@ -237,9 +228,7 @@ public class PlanetExpress {
                                 app.maxEnviosPorCliente
                         );
                         if (cliente != null) {
-                            System.out.println(app.insertarCliente(cliente) ?
-                                    "\tCliente con email " + cliente.getEmail() + " creado correctamente" :
-                                    "Ha ocurrido un error al crear el cliente");
+                            System.out.println("\tCliente con email " + cliente.getEmail() + " creado correctamente");
                         }
                     } else System.out.println("No se pueden dar de alta mas clientes");
                     break;
@@ -251,18 +240,20 @@ public class PlanetExpress {
                     break;
                 case 4:     // TODO: Listado de envíos de un cliente
                     Cliente cliente = app.listaClientes.seleccionarCliente(teclado,"¿De que cliente quieres listar los envios?");
-                    Envio envio = cliente.getListaEnvios().seleccionarEnvio(teclado, "Seleccione un envío: ");
-                    if (envio != null) {
-                        char valorEntrada;
-                        do {
-                            valorEntrada = Utilidades.leerLetra(teclado, "¿Cancelar envío (c), o generar factura (f)?", 'a', 'z');
-                            if (valorEntrada != 'c' && valorEntrada != 'e') {
-                                System.out.println("El valor de la entrada debe ser 'c' o 'f'");
-                            }
-                        } while (valorEntrada != 'c' && valorEntrada != 'f');
-                        if (valorEntrada == 'f') {
-                            envio.generarFactura(Utilidades.leerCadena(teclado, "Nombre del fichero: "));
-                        } else cliente.cancelarEnvio(envio.getLocalizador());
+                    if (cliente != null){
+                        Envio envio = cliente.getListaEnvios().seleccionarEnvio(teclado, "Seleccione un envío: ");
+                        if (envio != null) {
+                            char valorEntrada;
+                            do {
+                                valorEntrada = Utilidades.leerLetra(teclado, "¿Cancelar envío (c), o generar factura (f)?", 'a', 'z');
+                                if (valorEntrada != 'c' && valorEntrada != 'f') {
+                                    System.out.println("El valor de la entrada debe ser 'c' o 'f'");
+                                }
+                            } while (valorEntrada != 'c' && valorEntrada != 'f');
+                            if (valorEntrada == 'f') {
+                                envio.generarFactura(Utilidades.leerCadena(teclado, "Nombre del fichero: "));
+                            } else envio.cancelar();
+                        }
                     }
                     break;
                 case 5:     // TODO: Lista de envíos de un porte

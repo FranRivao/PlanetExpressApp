@@ -88,6 +88,9 @@ public class ListaEnvios {
         int pos = 0;
         Envio envio = null;
         while (envios[pos] != null && envio == null) {
+            System.out.println(envios[pos].getPorte().getID().equals(idPorte));
+            System.out.println(envios[pos].getFila() == fila);
+            System.out.println(envios[pos].getColumna() == columna);
             if (envios[pos].getPorte().getID().equals(idPorte) && envios[pos].getFila() == fila && envios[pos].getColumna() == columna) {
                 envio = envios[pos];
             }
@@ -108,6 +111,7 @@ public class ListaEnvios {
         while (pos < envios.length && !envios[pos].getLocalizador().equals(localizador)) {
             pos++;
         }
+        envios[pos].cancelar();
         for (int i = pos; i < envios.length - 1; i++) {
             if (i+1 != envios.length) {
                 envios[i] = envios[i+1];

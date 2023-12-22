@@ -103,7 +103,7 @@ public class Envio {
     public boolean generarFactura(String fichero) {
         PrintWriter pw;
         try {
-            pw = new PrintWriter(new FileWriter(fichero,true));
+            pw = new PrintWriter(new FileWriter("ficheros/"+fichero,true));
             pw.printf("-----------------------------------------------------\n");
             pw.printf("--------- Factura del envío " + localizador + " ---------\n");
             pw.printf("-----------------------------------------------------\n");
@@ -113,8 +113,9 @@ public class Envio {
             pw.printf("Salida: %s\n", porte.getSalida().toString());
             pw.printf("Llegada: %s\n", porte.getLlegada().toString());
             pw.printf("Cliente: %s\n", cliente.toString());
-            pw.printf("Hueco: %s\n", fila + columna);
+            pw.printf("Hueco: %s\n", fila + "" + (char)((columna-1)+'A'));
             pw.printf("Precio: %s\n", precio + " SSD");
+            pw.close();
             return true;
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -153,9 +154,21 @@ public class Envio {
      * @param cliente
      * @return Envio para el porte y cliente especificados
      */
-//    public static Envio altaEnvio(Scanner teclado, Random rand, Porte porte, Cliente cliente) {
-//
-//
-//        return;
-//    }
+    public static Envio altaEnvio(Scanner teclado, Random rand, Porte porte, Cliente cliente) {
+        Envio envio = null;
+        int fila, columna;
+        do {
+            fila = Utilidades.leerNumero(teclado, "Fila del hueco : ", 1, porte.getNave().getFilas());
+            columna = Utilidades.leerNumero(teclado, "Columna del hueco: ", 1, porte.getNave().getColumnas());
+        } while (porte.huecoOcupado(fila,columna));
+
+        double precio = Utilidades.leerNumero(teclado, "Precio del envío: ",1, Utilidades.maxPrecioEnvio);
+        String localizador = Envio.generarLocalizador(rand, porte.getID());
+        envio = new Envio(localizador, porte, cliente,fila, columna, precio);
+        if (porte.ocuparHueco(envio)){
+            System.out.println("Envio " + localizador + " creado correctamente");
+        } else System.out.println("Hubo un error al crear el envio");
+
+        return envio;
+    }
 }
