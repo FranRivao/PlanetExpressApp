@@ -1,0 +1,11 @@
+-----------------------------------------------------
+--------- Factura del envío PM1234LXQYQWXZA ---------
+-----------------------------------------------------
+Porte: PM1234
+Origen: Mercury Station (MS)
+Destino: Venus Station (VS)
+Salida: 15/01/2023
+Llegada: 16/01/2023
+Cliente: Hermes Conrad, hermes@planetexpress.com
+Hueco: 2A
+Precio: 123123.0 SSD

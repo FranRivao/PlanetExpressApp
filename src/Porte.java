@@ -140,7 +140,8 @@ public class Porte {
         Envio envio = buscarEnvio(localizador);
         if (huecoOcupado(envio.getFila(), envio.getColumna())) {
             huecos[envio.getFila()][envio.getColumna()] = false;
-            listaEnvios.eliminarEnvio(envio.getLocalizador());
+            envio.getCliente().cancelarEnvio(localizador);
+            listaEnvios.eliminarEnvio(localizador);
             return true;
         }
         return false;

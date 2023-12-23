@@ -1,4 +1,5 @@
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.Scanner;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -109,7 +110,6 @@ public class ListaEnvios {
         while (pos < envios.length && !envios[pos].getLocalizador().equals(localizador)) {
             pos++;
         }
-        envios[pos].cancelar();
         for (int i = pos; i < envios.length - 1; i++) {
             if (i+1 != envios.length) {
                 envios[i] = envios[i+1];
