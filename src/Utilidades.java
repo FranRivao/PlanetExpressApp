@@ -11,10 +11,10 @@ public class Utilidades {
     public static final double maxPrecioEnvio = 10000000;
     /**
      * TODO: Solicita un número repetidamente hasta que se introduzca uno correcto (dentro de los límites)
-     * @param teclado
-     * @param mensaje
-     * @param minimo
-     * @param maximo
+     * @param teclado scanner
+     * @param mensaje mensaje para leer numero
+     * @param minimo numero minimo
+     * @param maximo numero maximo
      * @return int numero
      */
     public static int leerNumero(Scanner teclado, String mensaje, int minimo, int maximo) {
@@ -28,10 +28,10 @@ public class Utilidades {
 
     /**
      * TODO: Solicita un número repetidamente hasta que se introduzca uno correcto (dentro de los límites)
-     * @param teclado
-     * @param mensaje
-     * @param minimo
-     * @param maximo
+     * @param teclado scanner
+     * @param mensaje mensaje para leer numero
+     * @param minimo numero minimo
+     * @param maximo numero maximo
      * @return long numero
      */
     public static long leerNumero(Scanner teclado, String mensaje, long minimo, long maximo) {
@@ -45,10 +45,10 @@ public class Utilidades {
 
     /**
      * TODO: Solicita un número repetidamente hasta que se introduzca uno correcto (dentro de los límites)
-     * @param teclado
-     * @param mensaje
-     * @param minimo
-     * @param maximo
+     * @param teclado scanner
+     * @param mensaje mensaje para leer numero
+     * @param minimo numero minimo
+     * @param maximo numero maximo
      * @return double numero
      */
     public static double leerNumero(Scanner teclado, String mensaje, double minimo, double maximo) {
@@ -62,10 +62,10 @@ public class Utilidades {
 
     /**
      * TODO: TODO: Solicita una letra repetidamente hasta que se introduzca uno correcto (dentro de los límites)
-     * @param teclado
-     * @param mensaje
-     * @param minimo
-     * @param maximo
+     * @param teclado scanner
+     * @param mensaje mensaje para leer caracter
+     * @param minimo letra minima
+     * @param maximo letra maxima
      * @return char letra
      */
     public static char leerLetra(Scanner teclado, String mensaje, char minimo, char maximo) {
@@ -79,8 +79,8 @@ public class Utilidades {
 
     /**
      * TODO: Solicita una fecha repetidamente hasta que se introduzca una correcta
-     * @param teclado
-     * @param mensaje
+     * @param teclado scanner
+     * @param mensaje mensaje para pedir ingresar una fecha
      * @return Fecha
      */
     public static Fecha leerFecha(Scanner teclado, String mensaje) {
@@ -108,8 +108,8 @@ public class Utilidades {
 
     /**
      * TODO: Solicita una fecha y hora repetidamente hasta que se introduzcan unas correctas
-     * @param teclado
-     * @param mensaje
+     * @param teclado scanner
+     * @param mensaje mensaje para pedir ingresar una fecha y hora
      * @return Fecha
      */
     public static Fecha leerFechaHora(Scanner teclado, String mensaje) {
@@ -135,8 +135,8 @@ public class Utilidades {
 
     /**
      * TODO: Imprime por pantalla el String pasado por parámetro
-     * @param teclado
-     * @param s
+     * @param teclado scanner
+     * @param s mensaje para leer la cadena
      * @return String
      */
     public static String leerCadena(Scanner teclado, String s) {

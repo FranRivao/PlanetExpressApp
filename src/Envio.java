@@ -8,9 +8,9 @@ import java.util.Scanner;
 /**
  * Description of the class
  *
- * @author
- * @author
- * @version 1.0
+ * @author Francisco Manuel Rivao
+ * @author Alejandro Sanchez Millan
+ * @version     1.0
  */
 public class Envio {
 
@@ -24,12 +24,12 @@ public class Envio {
     /**
      * Constructor of the class
      *
-     * @param localizador
-     * @param porte
-     * @param cliente
-     * @param fila
-     * @param columna
-     * @param precio
+     * @param localizador localizador del envio
+     * @param porte porte donde esta el envio
+     * @param cliente cliente que realiza el envio
+     * @param fila fila de la nave
+     * @param columna columna de la nave
+     * @param precio precio del envio
      */
     public Envio(String localizador, Porte porte, Cliente cliente, int fila, int columna, double precio) {
         this.localizador = localizador;
@@ -86,7 +86,7 @@ public class Envio {
      * TODO: Método para imprimir la información de este envío en un fichero que respecta el formato descrito en el
      *  enunciado
      *
-     * @param fichero
+     * @param fichero nombre del fichero
      * @return Devuelve la información con el siguiente formato como ejemplo ->
      * -----------------------------------------------------
      * --------- Factura del envío PM1111AAAABBBBC ---------
@@ -129,9 +129,9 @@ public class Envio {
      *   primeros será el ID del porte asociado y los 9 siguientes serán letras mayúsculas aleatorias. Ejemplo: PM0123ABCD
      *   NOTA: Usar el objeto rand pasado como argumento para la parte aleatoria.
      *
-     * @param rand
-     * @param idPorte
-     * @return
+     * @param rand metodo random
+     * @param idPorte id del porte donde se guardara el envio
+     * @return localizador del envio
      */
     public static String generarLocalizador(Random rand, String idPorte) {
         StringBuilder localizador = new StringBuilder(idPorte);
@@ -148,10 +148,10 @@ public class Envio {
      *  necesarios al usuario en el orden y con los textos indicados en los ejemplos de ejecución del enunciado
      *  La función solicita repetidamente los parámetros hasta que sean correctos
      *
-     * @param teclado
-     * @param rand
-     * @param porte
-     * @param cliente
+     * @param teclado scanner
+     * @param rand metodo random
+     * @param porte porte donde se guarda el envio
+     * @param cliente cliente que realiza el envio
      * @return Envio para el porte y cliente especificados
      */
     public static Envio altaEnvio(Scanner teclado, Random rand, Porte porte, Cliente cliente) {

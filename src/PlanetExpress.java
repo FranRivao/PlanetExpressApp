@@ -9,7 +9,7 @@ import java.util.Scanner;
 /**
  * Clase principal de Planet Express App, la práctica de Taller de Programación
  *
- * @author      Taller de Progamación
+ * @author      Francisco Manuel Rivao
  * @version     1.0
  */
 public class PlanetExpress {
@@ -44,11 +44,11 @@ public class PlanetExpress {
     /**
      * TODO: Metodo para leer los datos de los ficheros específicados en el enunciado y los agrega a
      *  la información de PlanetExpress (listaPuertosEspaciales, listaNaves, listaPortes, listaClientes)
-     * @param ficheroPuertos
-     * @param ficheroNaves
-     * @param ficheroPortes
-     * @param ficheroClientes
-     * @param ficheroEnvios
+     * @param ficheroPuertos nombre fichero puertos
+     * @param ficheroNaves nombre fichero naves
+     * @param ficheroPortes nombre fichero portes
+     * @param ficheroClientes nombre fichero clientes
+     * @param ficheroEnvios nombre fichero envios
      */
     public void cargarDatos(String ficheroPuertos, String ficheroNaves, String ficheroPortes, String ficheroClientes, String ficheroEnvios) {
         listaPuertosEspaciales = ListaPuertosEspaciales.leerPuertosEspacialesCsv(ficheroPuertos, maxPuertosEspaciales);
@@ -62,11 +62,11 @@ public class PlanetExpress {
     /**
      * TODO: Metodo para almacenar los datos de PlanetExpress en los ficheros .csv especificados
      *  en el enunciado de la práctica
-     * @param ficheroPuertos
-     * @param ficheroNaves
-     * @param ficheroPortes
-     * @param ficheroClientes
-     * @param ficheroEnvios
+     * @param ficheroPuertos nombre fichero puertos
+     * @param ficheroNaves nombre fichero naves
+     * @param ficheroPortes nombre fichero portes
+     * @param ficheroClientes nombre fichero clientes
+     * @param ficheroEnvios nombre fichero envios
      */
     public void guardarDatos(String ficheroPuertos, String ficheroNaves, String ficheroPortes, String ficheroClientes, String ficheroEnvios) {
         listaClientes.escribirClientesCsv(ficheroClientes);
@@ -101,8 +101,8 @@ public class PlanetExpress {
      *  Devuelve una lista de los portes entre dos puertos espaciales con una fecha de salida solicitados por teclado
      *  al usuario en el orden y con los textos establecidos (tomar como referencia los ejemplos de ejecución en el
      *  enunciado de la prática)
-     * @param teclado
-     * @return
+     * @param teclado scanner
+     * @return lista portes encontrados
      */
     public ListaPortes buscarPorte(Scanner teclado) {
         String codigoOrigen = "", codigoDestino = "";
@@ -133,9 +133,9 @@ public class PlanetExpress {
      * TODO: Metodo para contratar un envio tal y como se indica en el enunciado de la práctica. Se contrata un envio para un porte
      *  especificado, pidiendo por teclado los datos necesarios al usuario en el orden y con los textos (tomar como referencia los
      *  ejemplos de ejecución en el enunciado de la prática)
-     * @param teclado
-     * @param rand
-     * @param porte
+     * @param teclado scanner
+     * @param rand metodo random
+     * @param porte porte donde se contrata el envio
      */
     public void contratarEnvio(Scanner teclado, Random rand, Porte porte) {
         if (porte != null && !porte.porteLleno()) {
@@ -148,7 +148,14 @@ public class PlanetExpress {
                 }
             } while (valorEntrada != 'n' && valorEntrada != 'e');
 
-            Cliente cliente = valorEntrada == 'e' ? listaClientes.seleccionarCliente(teclado, "Email del cliente: ") : Cliente.altaCliente(teclado, listaClientes, maxEnviosPorCliente);
+            Cliente cliente;
+            if (valorEntrada == 'e') {
+                cliente = listaClientes.seleccionarCliente(teclado, "Email del cliente: ");
+            } else {
+                cliente = Cliente.altaCliente(teclado, listaClientes, maxEnviosPorCliente);
+                insertarCliente(cliente);
+            }
+
             if (cliente != null) {
                 Envio.altaEnvio(teclado, rand, porte, cliente);
             }
@@ -159,7 +166,7 @@ public class PlanetExpress {
     /**
      * TODO Metodo statico con la interfaz del menú de entrada a la App.
      * Tiene que coincidir con las trazas de ejecución que se muestran en el enunciado
-     * @param teclado
+     * @param teclado scanner
      * @return opción seleccionada
      */
     public static int menu(Scanner teclado) {
@@ -228,6 +235,7 @@ public class PlanetExpress {
                                 app.maxEnviosPorCliente
                         );
                         if (cliente != null) {
+                            app.insertarCliente(cliente);
                             System.out.println("\tCliente con email " + cliente.getEmail() + " creado correctamente");
                         }
                     } else System.out.println("No se pueden dar de alta mas clientes");
@@ -239,13 +247,13 @@ public class PlanetExpress {
                     } else System.out.println("No existe ese porte");
                     break;
                 case 4:     // TODO: Listado de envíos de un cliente
-                    Cliente cliente = app.listaClientes.seleccionarCliente(teclado,"¿De que cliente quieres listar los envios?");
+                    Cliente cliente = app.listaClientes.seleccionarCliente(teclado,"Email del cliente: ");
                     if (cliente != null){
                         Envio envio = cliente.getListaEnvios().seleccionarEnvio(teclado, "Seleccione un envío: ");
                         if (envio != null) {
                             char valorEntrada;
                             do {
-                                valorEntrada = Utilidades.leerLetra(teclado, "¿Cancelar envío (c), o generar factura (f)?", 'a', 'z');
+                                valorEntrada = Utilidades.leerLetra(teclado, "¿Cancelar envío (c), o generar factura (f)? ", 'a', 'z');
                                 if (valorEntrada != 'c' && valorEntrada != 'f') {
                                     System.out.println("El valor de la entrada debe ser 'c' o 'f'");
                                 }

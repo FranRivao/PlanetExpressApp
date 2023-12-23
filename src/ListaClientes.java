@@ -4,8 +4,8 @@ import java.util.Scanner;
 /**
  * Description of the class
  *
- * @author
- * @author
+ * @author Francisco Manuel Rivao
+ * @author Alejandro Sanchez Millan
  * @version     1.0
  */
 public class ListaClientes {
@@ -14,7 +14,7 @@ public class ListaClientes {
     /**
      * TODO: Constructor de la clase para inicializar la lista a una capacidad determinada
      *
-     * @param capacidad
+     * @param capacidad cantidad maxima de clientes
      */
     public ListaClientes(int capacidad) {
         this.clientes = new Cliente[capacidad];
@@ -61,15 +61,15 @@ public class ListaClientes {
      * TODO: Método para seleccionar un Cliente existente a partir de su email, usando el mensaje pasado como argumento
      *  para la solicitud y, siguiendo el orden y los textos mostrados en el enunciado.
      *  La función debe solicitar repetidamente hasta que se introduzca un email correcto
-     * @param teclado
-     * @param mensaje
-     * @return
+     * @param teclado scanner
+     * @param mensaje mensaje para pedir el email
+     * @return cliente seleccionado por email
      */
     public Cliente seleccionarCliente(Scanner teclado, String mensaje) {
         String email, cancelar = "cancelar";
         // PEDIR EMAIL
         do {
-            email = Utilidades.leerCadena(teclado, "Email del cliente: ");
+            email = Utilidades.leerCadena(teclado, mensaje);
             if (buscarClienteEmail(email) == null && !email.equalsIgnoreCase(cancelar)) {
                 System.out.println("No existe un cliente con dicho email");
             }
@@ -83,8 +83,8 @@ public class ListaClientes {
     /**
      * TODO: Método para guardar la lista de clientes en un fichero .csv, sobreescribiendo la información del mismo
      *  fichero
-     * @param fichero
-     * @return
+     * @param fichero nombre del fichero
+     * @return escritura del archivo correcta o no
      */
     public boolean escribirClientesCsv(String fichero) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(fichero, false))) {
@@ -105,9 +105,9 @@ public class ListaClientes {
     /**
      * TODO: Genera una lista de Clientes a partir del fichero CSV, usando los límites especificados como argumentos
      *  para la capacidad de la lista y el número de billetes máximo por pasajero
-     * @param fichero
-     * @param capacidad
-     * @param maxEnviosPorCliente
+     * @param fichero nombre del fichero
+     * @param capacidad maxima cantidad de clientes
+     * @param maxEnviosPorCliente maxima cantidad de envios por cliente
      * @return lista de clientes
      */
     public static ListaClientes leerClientesCsv(String fichero, int capacidad, int maxEnviosPorCliente) {

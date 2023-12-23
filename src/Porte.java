@@ -28,15 +28,15 @@ public class Porte {
     /**
      * TODO: Completa el constructo de la clase
      * 
-     * @param id
-     * @param nave
-     * @param origen
-     * @param muelleOrigen
-     * @param salida
-     * @param destino
-     * @param muelleDestino
-     * @param llegada
-     * @param precio
+     * @param id id del porte
+     * @param nave nave asociada
+     * @param origen puerto origen
+     * @param muelleOrigen muelle del puerto origen
+     * @param salida fecha salida
+     * @param destino puerto destino
+     * @param muelleDestino muelle del puerto destino
+     * @param llegada fecha llegado
+     * @param precio precio
      */
     public Porte(String id, Nave nave, PuertoEspacial origen, int muelleOrigen, Fecha salida, PuertoEspacial destino, int muelleDestino, Fecha llegada, double precio) {
         this.id = id;
@@ -107,8 +107,8 @@ public class Porte {
 
     /**
      * TODO: Devuelve el objeto Envio que corresponde con una fila o columna,
-     * @param fila
-     * @param columna
+     * @param fila fila de la nave
+     * @param columna columna de la nave
      * @return el objeto Envio que corresponde, o null si está libre o se excede en el límite de fila y columna
      */
     public Envio buscarEnvio(int fila, int columna) {
@@ -118,8 +118,8 @@ public class Porte {
     /**
      * TODO: Método que Si está desocupado el hueco que indica el envio, lo pone ocupado y devuelve true,
      *  si no devuelve false
-     * @param envio
-     * @return
+     * @param envio objeto envio a ingresar en el hueco
+     * @return si se ocupa correctamente o no
      */
     public boolean ocuparHueco(Envio envio) {
         if (!huecoOcupado(envio.getFila(), envio.getColumna())) {
@@ -133,8 +133,8 @@ public class Porte {
 
     /**
      * TODO: A través del localizador del envio, se desocupará el hueco
-     * @param localizador
-     * @return
+     * @param localizador localizador del envio
+     * @return si se desocupa correctamente o no
      */
     public boolean desocuparHueco(String localizador) {
         Envio envio = buscarEnvio(localizador);
@@ -166,10 +166,10 @@ public class Porte {
 
     /**
      * TODO: Devuelve true si el código origen, destino y fecha son los mismos que el porte
-     * @param codigoOrigen
-     * @param codigoDestino
-     * @param fecha
-     * @return
+     * @param codigoOrigen codigo puerto origen
+     * @param codigoDestino codigo puerto destino
+     * @param fecha fecha salida
+     * @return datos ingresados coinciden con el porte (true)
      */
     public boolean coincide(String codigoOrigen, String codigoDestino, Fecha fecha) {
         return (codigoOrigen.equals(origen.getCodigo()) && codigoDestino.equals(destino.getCodigo()) && fecha.coincide(salida));
@@ -210,8 +210,8 @@ public class Porte {
     /**
      * TODO: Devuelve true si ha podido escribir en un fichero la lista de envíos del porte, siguiendo las indicaciones
      *  del enunciado
-     * @param fichero
-     * @return
+     * @param fichero nombre del fichero
+     * @return escritura correcta o no
      */
     public boolean generarListaEnvios(String fichero) {
         PrintWriter pw = null;
@@ -224,17 +224,14 @@ public class Porte {
             pw.print("--------------------------------------------------\n");
             pw.print("-------- Lista de envíos del porte " + id + "--------\n");
             pw.print("--------------------------------------------------\n");
-            pw.print("Hueco\t\tCliente\n");
-            for (int i = 0; i < nave.getFilas(); i++) {
-                for (int k = 0; k < nave.getColumnas(); k++) {
+            pw.print("Hueco\tCliente\n");
+            for (int i = 0; i < huecos.length; i++) {
+                for (int k = 0; k < huecos[i].length; k++) {
                     if (huecos[i][k]) {
                         envio = buscarEnvio(i, k);
                         if (envio != null) {
-                            System.out.println(envio.getFila());
                             cliente = envio.getCliente();
-                            System.out.println("Aaaa");
-                            System.out.println(cliente.getEmail());
-                            pw.printf("%2d%1c\t\t%s %s, %s\n",envio.getFila(),(char)(envio.getColumna()-1)+'A',cliente.getNombre(),cliente.getApellidos(),cliente.getEmail());
+                            pw.printf("%2d%1c\t\t%s %s, %s\n",i+1,(char)k+'A',cliente.getNombre(),cliente.getApellidos(),cliente.getEmail());
                         }
                     } else {
                         pw.printf("%2d%1c\n",i+1,(char)k+'A');
@@ -253,7 +250,7 @@ public class Porte {
      * TODO: Genera un ID de porte. Este consistirá en una cadena de 6 caracteres, de los cuales los dos primeros
      *  serán PM y los 4 siguientes serán números aleatorios.
      *  NOTA: Usar el objeto rand pasado como argumento para la parte aleatoria.
-     * @param rand
+     * @param rand metodo random
      * @return ejemplo -> "PM0123"
      */
     public static String generarID(Random rand) {
@@ -265,12 +262,12 @@ public class Porte {
      *  y naves y la restricción de que no puede estar repetido el identificador, siguiendo las indicaciones
      *  del enunciado.
      *  La función solicita repetidamente los parametros hasta que sean correctos
-     * @param teclado
-     * @param rand
-     * @param puertosEspaciales
-     * @param naves
-     * @param portes
-     * @return
+     * @param teclado scanner
+     * @param rand metodo random
+     * @param puertosEspaciales lista puertos espaciales
+     * @param naves lista naves
+     * @param portes lista portes
+     * @return nuevo porte
      */
     public static Porte altaPorte(Scanner teclado, Random rand,
                                   ListaPuertosEspaciales puertosEspaciales,
@@ -284,18 +281,8 @@ public class Porte {
         } while(portes.buscarPorte(id) != null);
 
         // PUERTO ORIGEN
-        String origen;
-        PuertoEspacial puertoOrigen = null;
-        while (puertoOrigen == null && !cancelar) {
-            origen = Utilidades.leerCadena(teclado,"Ingrese código de puerto Origen: ");
-            puertoOrigen = puertosEspaciales.buscarPuertoEspacial(origen);
-
-            if (origen.equals("cancelar")) {
-                cancelar = true;
-            } else if (puertoOrigen == null) {
-                System.out.println("\tCódigo de puerto no encontrado.");
-            }
-        }
+        PuertoEspacial puertoOrigen = puertosEspaciales.seleccionarPuertoEspacial(teclado, "Ingrese código de puerto Origen: ");
+        cancelar = puertoOrigen == null;
 
         // MUELLE ORIGEN
         int muelleOrigen = -1;
@@ -304,19 +291,10 @@ public class Porte {
         }
 
         // PUERTO DESTINO
-        String destino;
         PuertoEspacial puertoDestino = null;
-        while ((puertoDestino == null || puertoDestino.getCodigo().equals(puertoOrigen.getCodigo())) && !cancelar) {
-            destino = Utilidades.leerCadena(teclado,"Ingrese código de puerto Destino: ");
-            puertoDestino = puertosEspaciales.buscarPuertoEspacial(destino);
-
-            if (destino.equals("cancelar")) {
-                cancelar = true;
-            } else if (puertoDestino == null) {
-                System.out.println("\tCódigo de puerto no encontrado.");
-            } else if (puertoDestino == puertoOrigen) {
-                System.out.println("\tPuerto Origen no puede coindicir con Puerto Destino");
-            }
+        if (!cancelar) {
+            puertoDestino = puertosEspaciales.seleccionarPuertoEspacial(teclado, "Ingrese código de puerto Destino: ");
+            cancelar = puertoDestino == null;
         }
 
         // MUELLE DESTINO
@@ -326,22 +304,11 @@ public class Porte {
         }
 
         // NAVE
-        String matricula;
         Nave nave = null;
         if (!cancelar){
             naves.mostrarNaves();
-        }
-        while ((nave == null || nave.getAlcance() < puertoOrigen.distancia(puertoDestino)) && !cancelar) {
-            matricula = Utilidades.leerCadena(teclado, "Ingrese matrícula de la nave: ");
-            nave = naves.buscarNave(matricula);
-
-            if (matricula.equalsIgnoreCase(  "cancelar")) {
-                cancelar = true;
-            } else if (nave == null) {
-                System.out.println("\tMatricula de nave no encontrada");
-            } else if (nave.getAlcance() < puertoOrigen.distancia(puertoDestino)) {
-                System.out.println("\tNave seleccionada con alcance insuficiente");
-            }
+            nave = naves.seleccionarNave(teclado, "Ingrese matrícula de la nave: ", puertoOrigen.distancia(puertoDestino));
+            cancelar = nave == null;
         }
 
         // FECHA SALIDA Y LLEGADA

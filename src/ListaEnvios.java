@@ -7,9 +7,9 @@ import java.io.PrintWriter;
 /**
  * Description of the class
  *
- * @author
- * @author
- * @version 1.0
+ * @author Francisco Manuel Rivao
+ * @author Alejandro Sanchez Millan
+ * @version     1.0
  */
 public class ListaEnvios {
     private Envio[] envios;
@@ -17,7 +17,7 @@ public class ListaEnvios {
     /**
      * TODO: Constructor de la clase para inicializar la lista a una capacidad determinada
      *
-     * @param capacidad
+     * @param capacidad cantidad maxima de envios
      */
     public ListaEnvios(int capacidad) {
         envios = new Envio[capacidad];
@@ -45,7 +45,7 @@ public class ListaEnvios {
     /**
      * TODO: insertamos un nuevo envío en la lista
      *
-     * @param envio
+     * @param envio objeto envio a insertar
      * @return true en caso de que se añada correctamente, false en caso de lista llena o error
      */
     public boolean insertarEnvio(Envio envio) {
@@ -53,6 +53,7 @@ public class ListaEnvios {
         if (!estaLlena()) {
             int pos = getOcupacion();
             envios[pos] = envio;
+            envios[pos].getPorte().ocuparHueco(envio);
             res = true;
         }
         return res;
@@ -61,7 +62,7 @@ public class ListaEnvios {
     /**
      * TODO: Buscamos el envio a partir del localizador pasado como parámetro
      *
-     * @param localizador
+     * @param localizador localizador del envio buscado
      * @return el envio que encontramos o null si no existe
      */
     public Envio buscarEnvio(String localizador) {
@@ -79,19 +80,16 @@ public class ListaEnvios {
     /**
      * TODO: Buscamos el envio a partir del idPorte, fila y columna pasados como parámetros
      *
-     * @param idPorte
-     * @param fila
-     * @param columna
+     * @param idPorte id del porte donde buscar
+     * @param fila fila de la nave donde esta el envio
+     * @param columna columna de la nave donde esta el envio
      * @return el envio que encontramos o null si no existe
      */
     public Envio buscarEnvio(String idPorte, int fila, int columna) {
         int pos = 0;
         Envio envio = null;
         while (envios[pos] != null && envio == null) {
-            System.out.println(envios[pos].getPorte().getID().equals(idPorte));
-            System.out.println(envios[pos].getFila() == fila);
-            System.out.println(envios[pos].getColumna() == columna);
-            if (envios[pos].getPorte().getID().equals(idPorte) && envios[pos].getFila() == fila && envios[pos].getColumna() == columna) {
+            if (envios[pos].getPorte().getID().equals(idPorte) && envios[pos].getFila()-1 == fila && envios[pos].getColumna()-1 == columna) {
                 envio = envios[pos];
             }
             pos++;
@@ -102,7 +100,7 @@ public class ListaEnvios {
     /**
      * TODO: Eliminamos un envio a través del localizador pasado por parámetro
      *
-     * @param localizador
+     * @param localizador localizador del envio
      * @return True si se ha borrado correctamente, false en cualquier otro caso
      */
     public boolean eliminarEnvio(String localizador) {
@@ -138,27 +136,29 @@ public class ListaEnvios {
      *  para la solicitud y siguiendo el orden y los textos mostrados en el enunciado.
      *  La función solicita repetidamente hasta que se introduzca un localizador correcto
      *
-     * @param teclado
-     * @param mensaje
-     * @return
+     * @param teclado scanner
+     * @param mensaje mensaje para pedir el localizador
+     * @return envio seleccionado o null si se cancelar
      */
     public Envio seleccionarEnvio(Scanner teclado, String mensaje) {
-        String localizador;
+        String localizador, cancelar = "cancelar";
         do {
-            localizador = Utilidades.leerCadena(teclado, "Seleccione un envío: ");
+            localizador = Utilidades.leerCadena(teclado, mensaje);
 
-            if (buscarEnvio(localizador) == null)
+            if (buscarEnvio(localizador) == null && !localizador.equalsIgnoreCase(cancelar))
                 System.out.println("Localizador incorrecto");
-        } while(buscarEnvio(localizador) == null);
-        return buscarEnvio(localizador);
+        } while(buscarEnvio(localizador) == null && !localizador.equalsIgnoreCase(cancelar));
+        if (!localizador.equalsIgnoreCase(cancelar)) {
+            return buscarEnvio(localizador);
+        } return null;
     }
 
 
     /**
      * TODO: Añade los Envios al final de un fichero CSV, SIN SOBREESCRIBIR la información
      *
-     * @param fichero
-     * @return
+     * @param fichero nombre del fichero
+     * @return escritura del fichero correcta o no
      */
     public boolean aniadirEnviosCsv(String fichero) {
         PrintWriter pw = null;
@@ -186,9 +186,9 @@ public class ListaEnvios {
     /**
      * TODO: Lee los Envios del fichero CSV y los añade a las listas de sus respectivos Portes y Clientes
      *
-     * @param ficheroEnvios
-     * @param portes
-     * @param clientes
+     * @param ficheroEnvios nombre del fichero
+     * @param portes lista de portes
+     * @param clientes lista de clientes
      */
 
     public static void leerEnviosCsv(String ficheroEnvios, ListaPortes portes, ListaClientes clientes) {

@@ -1,8 +1,8 @@
 /**
  * Description of the class
  *
- * @author
- * @author
+ * @author  Francisco Manuel Rivao
+ * @author  Alejandro Sanchez Millan
  * @version     1.0
  */
 public class Nave {
@@ -17,12 +17,12 @@ public class Nave {
     /**
      * Constructor of the class
      *
-     * @param marca
-     * @param modelo
-     * @param matricula
-     * @param columnas
-     * @param filas
-     * @param alcance
+     * @param marca marca de la nave
+     * @param modelo modelo de la nave
+     * @param matricula matricula de la nave
+     * @param columnas cantidad de columnas
+     * @param filas cantidad de filas
+     * @param alcance alcance de la nave
      */
     public Nave(String marca, String modelo, String matricula, int columnas, int filas, double alcance) {
         this.marca = marca;
