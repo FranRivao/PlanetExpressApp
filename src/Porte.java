@@ -139,7 +139,7 @@ public class Porte {
     public boolean desocuparHueco(String localizador) {
         Envio envio = buscarEnvio(localizador);
         if (huecoOcupado(envio.getFila(), envio.getColumna())) {
-            huecos[envio.getFila()][envio.getColumna()] = false;
+            huecos[envio.getFila()-1][envio.getColumna()-1] = false;
             envio.getCliente().cancelarEnvio(localizador);
             listaEnvios.eliminarEnvio(localizador);
             return true;
@@ -189,8 +189,8 @@ public class Porte {
         char val;
 
         // Letras superiores
-        System.out.print("  ");
         for (int o = 0; o < huecos[0].length; o++) {
+            System.out.print(" ");
             System.out.printf("%3c", (char)o+'A');
         }
         System.out.println();

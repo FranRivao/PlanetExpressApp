@@ -108,7 +108,6 @@ public class PlanetExpress {
         String codigoOrigen = "", codigoDestino = "";
         Fecha fecha = null;
         boolean cancelar;
-
         do {
             codigoOrigen = Utilidades.leerCadena(teclado, "Ingrese código de puerto Origen: ");
             cancelar = codigoOrigen.equalsIgnoreCase("cancelar");
@@ -142,7 +141,7 @@ public class PlanetExpress {
             porte.imprimirMatrizHuecos();
             char valorEntrada;
             do {
-                 valorEntrada = Utilidades.leerLetra(teclado, "¿Comprar un billete para un nuevo pasajero (n), o para uno ya existente (e)?", 'a', 'z');
+                 valorEntrada = Utilidades.leerLetra(teclado, "¿Comprar un billete para un nuevo pasajero (n), o para uno ya existente (e)? ", 'a', 'z');
                 if (valorEntrada != 'n' && valorEntrada != 'e') {
                     System.out.println("El valor de la entrada debe ser 'n' o 'e'");
                 }
@@ -241,10 +240,13 @@ public class PlanetExpress {
                     } else System.out.println("No se pueden dar de alta mas clientes");
                     break;
                 case 3:     // TODO: Buscar Porte
-                    ListaPortes lista = app.buscarPorte(teclado);
-                    if (lista.getOcupacion() > 0) {
-                        app.contratarEnvio(teclado, new Random(),lista.seleccionarPorte(teclado, "Seleccione un porte: ", "cancelar"));
-                    } else System.out.println("No existe ese porte");
+                    ListaPortes lista;
+                    do {
+                        lista = app.buscarPorte(teclado);
+                        if (lista.getOcupacion() <= 0)
+                            System.out.println("No existe ese porte");
+                    } while (lista.getOcupacion() <= 0);
+                    app.contratarEnvio(teclado, new Random(),lista.seleccionarPorte(teclado, "Seleccione un porte: ", "cancelar"));
                     break;
                 case 4:     // TODO: Listado de envíos de un cliente
                     Cliente cliente = app.listaClientes.seleccionarCliente(teclado,"Email del cliente: ");
